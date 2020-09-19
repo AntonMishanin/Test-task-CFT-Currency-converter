@@ -1,9 +1,12 @@
 package com.example.cft_converter.data.network
 
 import com.example.cft_converter.domain.entity.CurrencyEntityNetwork
+import com.google.gson.JsonObject
+import io.reactivex.Single
+import retrofit2.http.GET
 
 interface CurrencyApi {
 
-    @GET("sequeniatesttask/films.json")
-    fun getListOfCurrency():  Single<CurrencyEntityNetwork>
+    @GET("/daily_json.js")
+    fun getListOfCurrency(): Single<JsonObject>
 }

@@ -5,12 +5,13 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cft_converter.R
+import com.example.cft_converter.domain.entity.CurrencyBody
 
 class CurrencyAdapter  :
     RecyclerView.Adapter<CurrencyAdapter.ViewHolder>() {
 
-    private var listProfession: MutableList<ProfessionEntityAssets> = ArrayList()
-    private lateinit var listener: ProfessionClickListener
+    private var listValute: List<CurrencyBody> = ArrayList()
+    private lateinit var listener: CurrencyClickListener
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -18,31 +19,30 @@ class CurrencyAdapter  :
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(listProfession[position], position)
+        holder.bind(listValute[position], position)
     }
 
-    override fun getItemCount(): Int = listProfession.size
+    override fun getItemCount(): Int = listValute.size
 
-    fun setListProfession(listProfession: List<ProfessionEntityAssets>) {
-        this.listProfession.clear()
-        this.listProfession.addAll(listProfession)
+    fun setListCurrency(listValute: List<CurrencyBody>) {
+        this.listValute = listValute
         notifyDataSetChanged()
     }
 
-    fun setListener(listener: ProfessionClickListener) {
+    fun setListener(listener: CurrencyClickListener) {
         this.listener = listener
     }
 
     inner class ViewHolder(inflater: LayoutInflater, parent: ViewGroup) :
-        RecyclerView.ViewHolder(inflater.inflate(R.layout.item_profession, parent, false)) {
-        private var titleView: TextView? = null
+        RecyclerView.ViewHolder(inflater.inflate(R.layout.item_currency, parent, false)) {
+        private var currencyTitleView: TextView? = null
 
         init {
-            titleView = itemView.findViewById(R.id.item_profession_title)
+            currencyTitleView = itemView.findViewById(R.id.textView_item_currency_title)
         }
 
-        fun bind(profession: ProfessionEntityAssets, position: Int) {
-            titleView?.text = profession.title
+        fun bind(currency: CurrencyBody, position: Int) {
+            currencyTitleView?.text = currency.Name
 
             itemView.setOnClickListener {
                 listener.onItemClick(position)
@@ -51,7 +51,7 @@ class CurrencyAdapter  :
     }
 }
 
-interface ProfessionClickListener {
+interface CurrencyClickListener {
 
     fun onItemClick(position: Int)
 }
