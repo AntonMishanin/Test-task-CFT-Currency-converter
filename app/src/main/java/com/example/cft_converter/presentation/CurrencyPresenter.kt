@@ -1,8 +1,10 @@
 package com.example.cft_converter.presentation
 
+import android.content.Context
 import com.example.cft_converter.data.network.CurrencyApi
 import com.example.cft_converter.domain.CurrencyUseCase
 import com.example.cft_converter.domain.callback.NetworkCallback
+import com.example.cft_converter.domain.callback.PresentationCallback
 import com.example.cft_converter.domain.entity.CurrencyBody
 
 class CurrencyPresenter(
@@ -23,7 +25,7 @@ class CurrencyPresenter(
     fun onViewCreated() {
         view.initView()
 
-        useCase.requestListCurrency(api, object : NetworkCallback {
+        useCase.requestListCurrencyFromDb(api, object : PresentationCallback {
             override fun onSuccess(listValute: List<CurrencyBody>) {
                 view.setListCurrency(listValute)
                 valutes = listValute
@@ -41,7 +43,7 @@ class CurrencyPresenter(
                 view.setInputCurrencyValue("1")
             }
 
-            override fun onError(message: String?) {
+            override fun onError(message: String) {
 
             }
         })
@@ -112,7 +114,8 @@ class CurrencyPresenter(
                 outputCurrency.Value,
                 outputCurrency.Nominal
             )
-            view.setOutputCurrencyValue(outputCurrencyValue.toString())
+            val value = String.format("%.3f", outputCurrencyValue)
+            view.setOutputCurrencyValue(value)
         } else {
             val outputCurrencyValue = useCase.convertCurrency(
                 inputValue,
@@ -121,8 +124,34 @@ class CurrencyPresenter(
                 inputCurrency.Value,
                 inputCurrency.Nominal
             )
-            view.setInputCurrencyValue(outputCurrencyValue.toString())
+            val value = String.format("%.3f", outputCurrencyValue)
+            view.setInputCurrencyValue(value)
         }
         inputCurrencyValueNow = false
+    }
+
+    fun onReloadCurrencyList() {
+        useCase.onReloadCurrencyList(api, object : PresentationCallback {
+            override fun onSuccess(listValute: List<CurrencyBody>) {
+                view.setListCurrency(listValute)
+                valutes = listValute
+
+                inputCurrency = listValute[0]
+                val charCode1 = valutes[0].CharCode
+                view.setInputCurrencyCharCode(charCode1)
+                inputCurrency = valutes[0]
+
+                outputCurrency = listValute[1]
+                val charCode2 = valutes[1].CharCode
+                view.setOutputCurrencyCharCode(charCode2)
+                outputCurrency = valutes[1]
+
+                view.setInputCurrencyValue("1")
+            }
+
+            override fun onError(message: String) {
+
+            }
+        })
     }
 }

@@ -1,5 +1,6 @@
 package com.example.cft_converter.presentation
 
+import android.annotation.SuppressLint
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
@@ -44,9 +45,15 @@ class CurrencyActivity : AppCompatActivity(), CurrencyView, View.OnClickListener
             R.id.imageButton_select_output_currency -> {
                 presenter.onClickSelectOutputCurrency()
             }
+
+            R.id.imageButton_reload_list -> {
+                presenter.onReloadCurrencyList()
+            }
         }
     }
 
+    @SuppressLint("InflateParams")
+    @Suppress("DEPRECATION")
     override fun initView() {
         //Dialog
         currencyListAlertDialog = AlertDialog.Builder(
@@ -114,10 +121,13 @@ class CurrencyActivity : AppCompatActivity(), CurrencyView, View.OnClickListener
         //View
         findViewById<ImageButton>(R.id.imageButton_select_input_currency).setOnClickListener(this)
         findViewById<ImageButton>(R.id.imageButton_select_output_currency).setOnClickListener(this)
+        findViewById<ImageButton>(R.id.imageButton_reload_list).setOnClickListener(this)
     }
 
     override fun setListCurrency(listValute: List<CurrencyBody>) {
-        adapter.setListCurrency(listValute)
+        runOnUiThread {
+            adapter.setListCurrency(listValute)
+        }
     }
 
     override fun showDialog() {
@@ -129,22 +139,40 @@ class CurrencyActivity : AppCompatActivity(), CurrencyView, View.OnClickListener
     }
 
     override fun setInputCurrencyValue(currencyValue: String) {
-        val inputCurrencyView = findViewById<EditText>(R.id.editText_currency_input)
-        inputCurrencyView.setText(currencyValue)
+        runOnUiThread {
+            val inputCurrencyView = findViewById<EditText>(R.id.editText_currency_input)
+            inputCurrencyView.setText(currencyValue)
+        }
     }
 
     override fun setOutputCurrencyValue(currencyValue: String) {
-        val currencyOutputView = findViewById<EditText>(R.id.textView_currency_output)
-        currencyOutputView.setText(currencyValue)
+        runOnUiThread {
+            val currencyOutputView = findViewById<EditText>(R.id.textView_currency_output)
+            currencyOutputView.setText(currencyValue)
+        }
     }
 
     override fun setInputCurrencyCharCode(charCode: String) {
-        val inputCharCodeView = findViewById<TextView>(R.id.textView_input_currency_char_code)
-        inputCharCodeView.text = charCode
+        runOnUiThread {
+            val inputCharCodeView = findViewById<TextView>(R.id.textView_input_currency_char_code)
+            inputCharCodeView.text = charCode
+        }
     }
 
     override fun setOutputCurrencyCharCode(charCode: String) {
-        val outputCharCodeView = findViewById<TextView>(R.id.textView_output_currency_char_code)
-        outputCharCodeView.text = charCode
+        runOnUiThread {
+            val outputCharCodeView = findViewById<TextView>(R.id.textView_output_currency_char_code)
+            outputCharCodeView.text = charCode
+        }
+    }
+
+    override fun showInputError() {
+        val inputErrorView = findViewById<TextView>(R.id.textView_input_error)
+        inputErrorView.visibility = View.VISIBLE
+    }
+
+    override fun hideInputError() {
+        val inputErrorView = findViewById<TextView>(R.id.textView_input_error)
+        inputErrorView.visibility = View.GONE
     }
 }

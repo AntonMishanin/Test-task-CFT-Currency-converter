@@ -2,7 +2,7 @@ package com.example.cft_converter.domain.callback
 
 import com.example.cft_converter.domain.entity.CurrencyBody
 
-interface NetworkCallback {
+interface PresentationCallback {
 
     fun onSuccess(listValute: List<CurrencyBody>)
 

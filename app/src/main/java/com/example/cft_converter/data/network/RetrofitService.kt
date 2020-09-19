@@ -1,9 +1,5 @@
 package com.example.cft_converter.data.network
 
-import com.example.cft_converter.domain.entity.CurrencyBody
-import com.example.cft_converter.domain.entity.CurrencyEntityNetwork
-import com.google.gson.Gson
-import com.google.gson.GsonBuilder
 import retrofit2.CallAdapter
 import retrofit2.Converter
 import retrofit2.Retrofit

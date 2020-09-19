@@ -19,4 +19,8 @@ interface CurrencyView {
     fun setInputCurrencyCharCode(charCode: String)
 
     fun setOutputCurrencyCharCode(charCode: String)
+
+    fun showInputError()
+
+    fun hideInputError()
 }
