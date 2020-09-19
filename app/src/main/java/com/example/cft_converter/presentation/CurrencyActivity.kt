@@ -73,8 +73,8 @@ class CurrencyActivity : AppCompatActivity(), CurrencyView, View.OnClickListener
         })
 
         //TextChangedListener
-        val currencyInputView = findViewById<EditText>(R.id.editText_currency_input)
-        currencyInputView.addTextChangedListener(object : TextWatcher {
+        val inputCurrencyView = findViewById<EditText>(R.id.editText_currency_input)
+        inputCurrencyView.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable) {}
 
             override fun beforeTextChanged(
@@ -87,8 +87,27 @@ class CurrencyActivity : AppCompatActivity(), CurrencyView, View.OnClickListener
                 s: CharSequence, start: Int,
                 before: Int, count: Int
             ) {
-                val inputValue = currencyInputView.text.toString()
-                presenter.onCurrencyTextChanged(inputValue)
+                val inputValue = inputCurrencyView.text.toString()
+                presenter.onInputCurrencyTextChanged(inputValue)
+            }
+        })
+
+        val outputCurrencyView = findViewById<EditText>(R.id.textView_currency_output)
+        outputCurrencyView.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable) {}
+
+            override fun beforeTextChanged(
+                s: CharSequence, start: Int,
+                count: Int, after: Int
+            ) {
+            }
+
+            override fun onTextChanged(
+                s: CharSequence, start: Int,
+                before: Int, count: Int
+            ) {
+                val inputValue = outputCurrencyView.text.toString()
+                presenter.onOutputCurrencyTextChanged(inputValue)
             }
         })
 
@@ -109,9 +128,14 @@ class CurrencyActivity : AppCompatActivity(), CurrencyView, View.OnClickListener
         currencyListAlertDialog.hide()
     }
 
-    override fun setCurrencyValue(currencyValue: String) {
-        val currencyOutputView = findViewById<TextView>(R.id.textView_currency_output)
-        currencyOutputView.text = currencyValue
+    override fun setInputCurrencyValue(currencyValue: String) {
+        val inputCurrencyView = findViewById<EditText>(R.id.editText_currency_input)
+        inputCurrencyView.setText(currencyValue)
+    }
+
+    override fun setOutputCurrencyValue(currencyValue: String) {
+        val currencyOutputView = findViewById<EditText>(R.id.textView_currency_output)
+        currencyOutputView.setText(currencyValue)
     }
 
     override fun setInputCurrencyCharCode(charCode: String) {

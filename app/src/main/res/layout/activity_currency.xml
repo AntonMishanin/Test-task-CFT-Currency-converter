@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".presentation.CurrencyActivity">
 
-    <TextView
+    <EditText
         android:id="@+id/textView_currency_output"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

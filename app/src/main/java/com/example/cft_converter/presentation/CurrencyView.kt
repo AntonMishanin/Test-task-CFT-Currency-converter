@@ -12,7 +12,9 @@ interface CurrencyView {
 
     fun hideDialog()
 
-    fun setCurrencyValue(currencyValue: String)
+    fun setInputCurrencyValue(currencyValue: String)
+
+    fun setOutputCurrencyValue(currencyValue: String)
 
     fun setInputCurrencyCharCode(charCode: String)
 
