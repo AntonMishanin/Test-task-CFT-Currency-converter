@@ -80,10 +80,14 @@ open class CurrencyPresenter(
         if (inputDouble == null) {
             viewState.showInputError()
         } else {
-            viewState.hideInputError()
-            this.inputValue = inputValue.toDouble()
-            inputCurrencyValueChanged = true
-            convertCurrency()
+            try {
+                viewState.hideInputError()
+                this.inputValue = inputValue.toDouble()
+                inputCurrencyValueChanged = true
+                convertCurrency()
+            } catch (e: NumberFormatException) {
+                viewState.showInputError()
+            }
         }
     }
 
@@ -97,10 +101,14 @@ open class CurrencyPresenter(
         if (inputDouble == null) {
             viewState.showInputError()
         } else {
-            viewState.hideInputError()
-            this.inputValue = inputValue.toDouble()
-            inputCurrencyValueChanged = false
-            convertCurrency()
+            try {
+                viewState.hideInputError()
+                this.inputValue = inputValue.toDouble()
+                inputCurrencyValueChanged = false
+                convertCurrency()
+            } catch (e: NumberFormatException) {
+                viewState.showInputError()
+            }
         }
     }
 
