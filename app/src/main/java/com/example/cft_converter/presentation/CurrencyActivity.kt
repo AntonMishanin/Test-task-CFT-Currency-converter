@@ -87,6 +87,10 @@ class CurrencyActivity : MvpAppCompatActivity(), CurrencyView, View.OnClickListe
             .inflate(R.layout.dialog_list_currency, null, false)
         currencyListAlertDialog.setView(currencyListView)
 
+        currencyListAlertDialog.setOnCancelListener {
+            presenter.hideDialog()
+        }
+
         //RecyclerView
         val recyclerViewOrderDetail =
             currencyListView.findViewById<RecyclerView>(R.id.recyclerView_dialog_currency)
@@ -155,7 +159,7 @@ class CurrencyActivity : MvpAppCompatActivity(), CurrencyView, View.OnClickListe
     }
 
     override fun hideDialog() {
-        currencyListAlertDialog.hide()
+        currencyListAlertDialog.dismiss()
     }
 
     override fun setInputCurrencyValue(currencyValue: String) {

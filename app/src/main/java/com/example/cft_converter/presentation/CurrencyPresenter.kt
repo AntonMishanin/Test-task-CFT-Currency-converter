@@ -172,4 +172,8 @@ open class CurrencyPresenter(
             }
         })
     }
+
+    fun hideDialog() {
+        viewState.hideDialog()
+    }
 }
