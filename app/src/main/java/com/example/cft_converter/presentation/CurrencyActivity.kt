@@ -1,10 +1,10 @@
 package com.example.cft_converter.presentation
 
 import android.annotation.SuppressLint
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.EditText
@@ -14,25 +14,27 @@ import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cft_converter.R
-import com.example.cft_converter.data.network.RetrofitService
-import com.example.cft_converter.domain.CurrencyUseCase
 import com.example.cft_converter.domain.entity.CurrencyBody
+import moxy.MvpAppCompatActivity
+import moxy.presenter.InjectPresenter
+import moxy.presenter.ProvidePresenter
 
-class CurrencyActivity : AppCompatActivity(), CurrencyView, View.OnClickListener {
+class CurrencyActivity : MvpAppCompatActivity(), CurrencyView, View.OnClickListener {
 
-    private val retrofit = RetrofitService()
-    private val api = retrofit.provideCurrencyApi(retrofit.provideRetrofit())
-    private val useCase = CurrencyUseCase()
-    private val presenter = CurrencyPresenter(this, api, useCase)
+    @InjectPresenter
+    lateinit var presenter: CurrencyPresenter
 
     private lateinit var currencyListAlertDialog: AlertDialog
-    private lateinit var adapter: CurrencyAdapter
+    private var adapter = CurrencyAdapter()
+
+    @ProvidePresenter
+    fun providePresenter() = CurrencyPresenter()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_currency)
 
-        presenter.onViewCreated()
     }
 
     override fun onClick(v: View?) {
@@ -66,8 +68,6 @@ class CurrencyActivity : AppCompatActivity(), CurrencyView, View.OnClickListener
         currencyListAlertDialog.setView(currencyListView)
 
         //RecyclerView
-        adapter = CurrencyAdapter()
-
         val recyclerViewOrderDetail =
             currencyListView.findViewById<RecyclerView>(R.id.recyclerView_dialog_currency)
         recyclerViewOrderDetail?.layoutManager = LinearLayoutManager(this)
@@ -139,6 +139,7 @@ class CurrencyActivity : AppCompatActivity(), CurrencyView, View.OnClickListener
     }
 
     override fun setInputCurrencyValue(currencyValue: String) {
+        Log.d("TAG", "setInputCurrencyValue")
         runOnUiThread {
             val inputCurrencyView = findViewById<EditText>(R.id.editText_currency_input)
             inputCurrencyView.setText(currencyValue)

@@ -1,8 +1,12 @@
 package com.example.cft_converter.presentation
 
 import com.example.cft_converter.domain.entity.CurrencyBody
+import moxy.MvpView
+import moxy.viewstate.strategy.AddToEndSingleStrategy
+import moxy.viewstate.strategy.StateStrategyType
 
-interface CurrencyView {
+@StateStrategyType(value = AddToEndSingleStrategy::class)
+interface CurrencyView: MvpView {
 
     fun initView()
 
