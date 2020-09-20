@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">CFT-converter</string>
+    <string name="input_value">Введите значение</string>
+    <string name="input_error_text">Ошибка ввода. Введите число вида: 99.5</string>
 </resources>

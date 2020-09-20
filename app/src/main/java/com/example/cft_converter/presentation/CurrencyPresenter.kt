@@ -1,26 +1,23 @@
 package com.example.cft_converter.presentation
 
-import android.util.Log
 
 import com.example.cft_converter.domain.CurrencyUseCase
 import com.example.cft_converter.domain.callback.PresentationCallback
 import com.example.cft_converter.domain.entity.CurrencyBody
+import com.example.cft_converter.utils.GetDoubleFromString
 
-import com.example.cft_converter.data.network.RetrofitService
 import moxy.InjectViewState
 import moxy.MvpPresenter
 
 @InjectViewState
-open class CurrencyPresenter: MvpPresenter<CurrencyView>() {
-
-   private val retrofit = RetrofitService()
-   private val api = retrofit.provideCurrencyApi(retrofit.provideRetrofit())
-   private val useCase = CurrencyUseCase()
+open class CurrencyPresenter(
+    private val useCase: CurrencyUseCase
+) : MvpPresenter<CurrencyView>() {
 
     private lateinit var valutes: List<CurrencyBody>
     private var selectCurrency = 0
 
-    private var inputCurrency =  CurrencyBody()
+    private var inputCurrency = CurrencyBody()
     private var outputCurrency = CurrencyBody()
     private var inputValue = 0.0
     private var inputCurrencyValueNow = false
@@ -28,12 +25,11 @@ open class CurrencyPresenter: MvpPresenter<CurrencyView>() {
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
-        Log.d("TAG", "onFirstViewAttach()")
         viewState.initView()
+        viewState.hideInputError()
 
-        useCase.requestListCurrencyFromDb(api, object : PresentationCallback {
+        useCase.requestListCurrencyFromDb(object : PresentationCallback {
             override fun onSuccess(listValute: List<CurrencyBody>) {
-                Log.d("TAG", "listValute = ${listValute.size}")
                 viewState.setListCurrency(listValute)
                 valutes = listValute
 
@@ -51,7 +47,7 @@ open class CurrencyPresenter: MvpPresenter<CurrencyView>() {
             }
 
             override fun onError(message: String) {
-Log.d("TAG", "message = $message")
+                viewState.showListLoadingError(message)
             }
         })
     }
@@ -79,12 +75,15 @@ Log.d("TAG", "message = $message")
         if (inputCurrencyValueNow) {
             return
         }
+        val inputDouble = GetDoubleFromString.invoke(inputValue)
 
-        try {
+        if (inputDouble == null) {
+            viewState.showInputError()
+        } else {
+            viewState.hideInputError()
             this.inputValue = inputValue.toDouble()
             inputCurrencyValueChanged = true
             convertCurrency()
-        } catch (e: NumberFormatException) {
         }
     }
 
@@ -93,11 +92,15 @@ Log.d("TAG", "message = $message")
             return
         }
 
-        try {
+        val inputDouble = GetDoubleFromString.invoke(inputValue)
+
+        if (inputDouble == null) {
+            viewState.showInputError()
+        } else {
+            viewState.hideInputError()
             this.inputValue = inputValue.toDouble()
             inputCurrencyValueChanged = false
             convertCurrency()
-        } catch (e: NumberFormatException) {
         }
     }
 
@@ -138,11 +141,8 @@ Log.d("TAG", "message = $message")
     }
 
     fun onReloadCurrencyList() {
-        Log.d("TAG", "onReloadCurrencyList() {")
-
-        useCase.onReloadCurrencyList(api, object : PresentationCallback {
+        useCase.onReloadCurrencyList(object : PresentationCallback {
             override fun onSuccess(listValute: List<CurrencyBody>) {
-                Log.d("TAG", "listValute() { ${listValute.size}")
                 viewState.setListCurrency(listValute)
                 valutes = listValute
 
@@ -160,7 +160,7 @@ Log.d("TAG", "message = $message")
             }
 
             override fun onError(message: String) {
-                Log.d("TAG", "omessage $message")
+                viewState.showListLoadingError(message)
             }
         })
     }

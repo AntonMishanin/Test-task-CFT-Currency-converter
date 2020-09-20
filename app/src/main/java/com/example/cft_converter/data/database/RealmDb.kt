@@ -6,9 +6,7 @@ import com.example.cft_converter.domain.entity.CurrencyBody
 import com.example.cft_converter.domain.entity.CurrencyEntityDb
 import io.realm.Realm
 
-class RealmDb {
-
-    private val realm: Realm = Realm.getDefaultInstance()
+class RealmDb(private val realm: Realm) {
 
     fun requestCurrencyEntityList(callback: RequestFromDbCallback) {
         realm.executeTransactionAsync({ realm ->

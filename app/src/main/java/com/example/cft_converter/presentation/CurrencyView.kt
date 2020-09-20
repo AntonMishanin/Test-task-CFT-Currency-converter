@@ -27,4 +27,7 @@ interface CurrencyView: MvpView {
     fun showInputError()
 
     fun hideInputError()
+
+    fun showListLoadingError(errorMessage: String)
+
 }

@@ -4,20 +4,32 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cft_converter.R
+import com.example.cft_converter.data.CurrencyRepositoryImpl
+import com.example.cft_converter.data.database.RealmDb
+import com.example.cft_converter.data.network.CurrencyNetwork
+import com.example.cft_converter.data.network.RetrofitService
+import com.example.cft_converter.domain.CurrencyUseCase
+import com.example.cft_converter.domain.ICurrencyRepository
 import com.example.cft_converter.domain.entity.CurrencyBody
+import io.realm.Realm
 import moxy.MvpAppCompatActivity
 import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
+
+/**
+ * Мишанин Антон
+ * https://github.com/AntonMishanin/Test-task-CFT-Currency-converter
+ */
 
 class CurrencyActivity : MvpAppCompatActivity(), CurrencyView, View.OnClickListener {
 
@@ -27,14 +39,22 @@ class CurrencyActivity : MvpAppCompatActivity(), CurrencyView, View.OnClickListe
     private lateinit var currencyListAlertDialog: AlertDialog
     private var adapter = CurrencyAdapter()
 
-    @ProvidePresenter
-    fun providePresenter() = CurrencyPresenter()
+    private val retrofit = RetrofitService()
+    private val api = retrofit.provideCurrencyApi(retrofit.provideRetrofit())
+    private val network = CurrencyNetwork(api)
 
+    private val realm: Realm = Realm.getDefaultInstance()
+    private val realmDb = RealmDb(realm)
+
+    private val repository: ICurrencyRepository = CurrencyRepositoryImpl(realmDb, network)
+    private val useCase = CurrencyUseCase(repository)
+
+    @ProvidePresenter
+    fun providePresenter() = CurrencyPresenter(useCase)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_currency)
-
     }
 
     override fun onClick(v: View?) {
@@ -139,7 +159,6 @@ class CurrencyActivity : MvpAppCompatActivity(), CurrencyView, View.OnClickListe
     }
 
     override fun setInputCurrencyValue(currencyValue: String) {
-        Log.d("TAG", "setInputCurrencyValue")
         runOnUiThread {
             val inputCurrencyView = findViewById<EditText>(R.id.editText_currency_input)
             inputCurrencyView.setText(currencyValue)
@@ -175,5 +194,9 @@ class CurrencyActivity : MvpAppCompatActivity(), CurrencyView, View.OnClickListe
     override fun hideInputError() {
         val inputErrorView = findViewById<TextView>(R.id.textView_input_error)
         inputErrorView.visibility = View.GONE
+    }
+
+    override fun showListLoadingError(errorMessage: String) {
+        Toast.makeText(this, errorMessage, Toast.LENGTH_LONG).show()
     }
 }
