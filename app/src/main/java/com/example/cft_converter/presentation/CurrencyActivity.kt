@@ -29,6 +29,7 @@ import moxy.presenter.ProvidePresenter
 /**
  * Мишанин Антон
  * https://github.com/AntonMishanin/Test-task-CFT-Currency-converter
+ *
  */
 
 class CurrencyActivity : MvpAppCompatActivity(), CurrencyView, View.OnClickListener {
