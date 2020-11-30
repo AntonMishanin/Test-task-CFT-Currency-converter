@@ -49,6 +49,12 @@ class CurrencyActivity : MvpAppCompatActivity(), CurrencyView, View.OnClickListe
     private val repository: ICurrencyRepository = CurrencyRepositoryImpl(realmDb, network)
     private val useCase = CurrencyUseCase(repository)
 
+    private var inputErrorView: TextView? = null
+    private var outputCharCodeView: TextView? = null
+    private var inputCharCodeView: TextView? = null
+    private var outputCurrencyView: EditText? = null
+    private var inputCurrencyView: EditText? = null
+
     @ProvidePresenter
     fun providePresenter() = CurrencyPresenter(useCase)
 
@@ -77,6 +83,10 @@ class CurrencyActivity : MvpAppCompatActivity(), CurrencyView, View.OnClickListe
     @SuppressLint("InflateParams")
     @Suppress("DEPRECATION")
     override fun initView() {
+        inputErrorView = findViewById(R.id.textView_input_error)
+        outputCharCodeView = findViewById(R.id.textView_output_currency_char_code)
+        inputCharCodeView = findViewById(R.id.textView_input_currency_char_code)
+
         //Dialog
         currencyListAlertDialog = AlertDialog.Builder(
             this,
@@ -104,8 +114,8 @@ class CurrencyActivity : MvpAppCompatActivity(), CurrencyView, View.OnClickListe
         })
 
         //TextChangedListener
-        val inputCurrencyView = findViewById<EditText>(R.id.editText_currency_input)
-        inputCurrencyView.addTextChangedListener(object : TextWatcher {
+        inputCurrencyView = findViewById(R.id.editText_currency_input)
+        inputCurrencyView?.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable) {}
 
             override fun beforeTextChanged(
@@ -118,13 +128,13 @@ class CurrencyActivity : MvpAppCompatActivity(), CurrencyView, View.OnClickListe
                 s: CharSequence, start: Int,
                 before: Int, count: Int
             ) {
-                val inputValue = inputCurrencyView.text.toString()
+                val inputValue = inputCurrencyView?.text.toString()
                 presenter.onInputCurrencyTextChanged(inputValue)
             }
         })
 
-        val outputCurrencyView = findViewById<EditText>(R.id.textView_currency_output)
-        outputCurrencyView.addTextChangedListener(object : TextWatcher {
+        outputCurrencyView = findViewById(R.id.textView_currency_output)
+        outputCurrencyView?.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable) {}
 
             override fun beforeTextChanged(
@@ -137,7 +147,7 @@ class CurrencyActivity : MvpAppCompatActivity(), CurrencyView, View.OnClickListe
                 s: CharSequence, start: Int,
                 before: Int, count: Int
             ) {
-                val inputValue = outputCurrencyView.text.toString()
+                val inputValue = outputCurrencyView?.text.toString()
                 presenter.onOutputCurrencyTextChanged(inputValue)
             }
         })
@@ -164,40 +174,34 @@ class CurrencyActivity : MvpAppCompatActivity(), CurrencyView, View.OnClickListe
 
     override fun setInputCurrencyValue(currencyValue: String) {
         runOnUiThread {
-            val inputCurrencyView = findViewById<EditText>(R.id.editText_currency_input)
-            inputCurrencyView.setText(currencyValue)
+            inputCurrencyView?.setText(currencyValue)
         }
     }
 
     override fun setOutputCurrencyValue(currencyValue: String) {
         runOnUiThread {
-            val currencyOutputView = findViewById<EditText>(R.id.textView_currency_output)
-            currencyOutputView.setText(currencyValue)
+            outputCurrencyView?.setText(currencyValue)
         }
     }
 
     override fun setInputCurrencyCharCode(charCode: String) {
         runOnUiThread {
-            val inputCharCodeView = findViewById<TextView>(R.id.textView_input_currency_char_code)
-            inputCharCodeView.text = charCode
+            inputCharCodeView?.text = charCode
         }
     }
 
     override fun setOutputCurrencyCharCode(charCode: String) {
         runOnUiThread {
-            val outputCharCodeView = findViewById<TextView>(R.id.textView_output_currency_char_code)
-            outputCharCodeView.text = charCode
+            outputCharCodeView?.text = charCode
         }
     }
 
     override fun showInputError() {
-        val inputErrorView = findViewById<TextView>(R.id.textView_input_error)
-        inputErrorView.visibility = View.VISIBLE
+        inputErrorView?.visibility = View.VISIBLE
     }
 
     override fun hideInputError() {
-        val inputErrorView = findViewById<TextView>(R.id.textView_input_error)
-        inputErrorView.visibility = View.GONE
+        inputErrorView?.visibility = View.GONE
     }
 
     override fun showListLoadingError(errorMessage: String) {
