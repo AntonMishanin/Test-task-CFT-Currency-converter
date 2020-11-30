@@ -49,7 +49,6 @@ class CurrencyActivity : MvpAppCompatActivity(), CurrencyView, View.OnClickListe
     private val repository: ICurrencyRepository = CurrencyRepositoryImpl(realmDb, network)
     private val useCase = CurrencyUseCase(repository)
 
-    private var inputErrorView: TextView? = null
     private var outputCharCodeView: TextView? = null
     private var inputCharCodeView: TextView? = null
     private var outputCurrencyView: EditText? = null
@@ -83,7 +82,6 @@ class CurrencyActivity : MvpAppCompatActivity(), CurrencyView, View.OnClickListe
     @SuppressLint("InflateParams")
     @Suppress("DEPRECATION")
     override fun initView() {
-        inputErrorView = findViewById(R.id.textView_input_error)
         outputCharCodeView = findViewById(R.id.textView_output_currency_char_code)
         inputCharCodeView = findViewById(R.id.textView_input_currency_char_code)
 
@@ -128,8 +126,7 @@ class CurrencyActivity : MvpAppCompatActivity(), CurrencyView, View.OnClickListe
                 s: CharSequence, start: Int,
                 before: Int, count: Int
             ) {
-                val inputValue = inputCurrencyView?.text.toString()
-                presenter.onInputCurrencyTextChanged(inputValue)
+                presenter.onInputCurrencyTextChanged(s)
             }
         })
 
@@ -147,8 +144,7 @@ class CurrencyActivity : MvpAppCompatActivity(), CurrencyView, View.OnClickListe
                 s: CharSequence, start: Int,
                 before: Int, count: Int
             ) {
-                val inputValue = outputCurrencyView?.text.toString()
-                presenter.onOutputCurrencyTextChanged(inputValue)
+                presenter.onOutputCurrencyTextChanged(s)
             }
         })
 
@@ -194,14 +190,6 @@ class CurrencyActivity : MvpAppCompatActivity(), CurrencyView, View.OnClickListe
         runOnUiThread {
             outputCharCodeView?.text = charCode
         }
-    }
-
-    override fun showInputError() {
-        inputErrorView?.visibility = View.VISIBLE
-    }
-
-    override fun hideInputError() {
-        inputErrorView?.visibility = View.GONE
     }
 
     override fun showListLoadingError(errorMessage: String) {

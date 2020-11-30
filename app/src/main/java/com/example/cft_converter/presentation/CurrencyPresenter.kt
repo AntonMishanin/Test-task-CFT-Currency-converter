@@ -4,7 +4,6 @@ package com.example.cft_converter.presentation
 import com.example.cft_converter.domain.CurrencyUseCase
 import com.example.cft_converter.domain.callback.PresentationCallback
 import com.example.cft_converter.domain.entity.CurrencyBody
-import com.example.cft_converter.utils.GetDoubleFromString
 
 import moxy.InjectViewState
 import moxy.MvpPresenter
@@ -20,13 +19,12 @@ open class CurrencyPresenter(
     private var inputCurrency = CurrencyBody()
     private var outputCurrency = CurrencyBody()
     private var inputValue = 0.0
-    private var inputCurrencyValueNow = false
-    private var inputCurrencyValueChanged = false
+    private var inputFromUser = true
+    private var userEntersValuesIntoInputField = false
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
         viewState.initView()
-        viewState.hideInputError()
 
         useCase.requestListCurrencyFromDb(object : PresentationCallback {
             override fun onSuccess(listValute: List<CurrencyBody>) {
@@ -71,44 +69,27 @@ open class CurrencyPresenter(
         viewState.hideDialog()
     }
 
-    fun onInputCurrencyTextChanged(inputValue: String) {
-        if (inputCurrencyValueNow) {
-            return
-        }
-        val inputDouble = GetDoubleFromString.invoke(inputValue)
-
-        if (inputDouble == null) {
-            viewState.showInputError()
-        } else {
+    fun onInputCurrencyTextChanged(inputValue: CharSequence) {
+        if (inputFromUser) {
             try {
-                viewState.hideInputError()
-                this.inputValue = inputValue.toDouble()
-                inputCurrencyValueChanged = true
-                convertCurrency()
+                this.inputValue = inputValue.toString().toDouble()
             } catch (e: NumberFormatException) {
-                viewState.showInputError()
+                this.inputValue = 0.0
             }
+            userEntersValuesIntoInputField = true
+            convertCurrency()
         }
     }
 
-    fun onOutputCurrencyTextChanged(inputValue: String) {
-        if (inputCurrencyValueNow) {
-            return
-        }
-
-        val inputDouble = GetDoubleFromString.invoke(inputValue)
-
-        if (inputDouble == null) {
-            viewState.showInputError()
-        } else {
+    fun onOutputCurrencyTextChanged(inputValue: CharSequence) {
+        if (inputFromUser) {
             try {
-                viewState.hideInputError()
-                this.inputValue = inputValue.toDouble()
-                inputCurrencyValueChanged = false
-                convertCurrency()
+                this.inputValue = inputValue.toString().toDouble()
             } catch (e: NumberFormatException) {
-                viewState.showInputError()
+                this.inputValue = 0.0
             }
+            userEntersValuesIntoInputField = false
+            convertCurrency()
         }
     }
 
@@ -123,8 +104,8 @@ open class CurrencyPresenter(
     }
 
     private fun convertCurrency() {
-        inputCurrencyValueNow = true
-        if (inputCurrencyValueChanged) {
+        inputFromUser = false
+        if (userEntersValuesIntoInputField) {
             val outputCurrencyValue = useCase.convertCurrency(
                 inputValue,
                 inputCurrency.Value,
@@ -145,7 +126,7 @@ open class CurrencyPresenter(
             val value = String.format("%.3f", outputCurrencyValue)
             viewState.setInputCurrencyValue(value)
         }
-        inputCurrencyValueNow = false
+        inputFromUser = true
     }
 
     fun onReloadCurrencyList() {
