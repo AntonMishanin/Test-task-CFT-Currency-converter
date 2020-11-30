@@ -1,7 +1,7 @@
 package com.example.cft_converter.presentation
 
 
-import com.example.cft_converter.domain.CurrencyUseCase
+import com.example.cft_converter.domain.RequestListCurrencyUseCase
 import com.example.cft_converter.domain.callback.PresentationCallback
 import com.example.cft_converter.domain.entity.CurrencyBody
 
@@ -10,7 +10,7 @@ import moxy.MvpPresenter
 
 @InjectViewState
 open class CurrencyPresenter(
-    private val useCase: CurrencyUseCase
+    private val useCase: RequestListCurrencyUseCase
 ) : MvpPresenter<CurrencyView>() {
 
     private lateinit var valutes: List<CurrencyBody>
@@ -26,7 +26,7 @@ open class CurrencyPresenter(
         super.onFirstViewAttach()
         viewState.initView()
 
-        useCase.requestListCurrencyFromDb(object : PresentationCallback {
+        useCase.fromDb(object : PresentationCallback {
             override fun onSuccess(listValute: List<CurrencyBody>) {
                 viewState.setListCurrency(listValute)
                 valutes = listValute
@@ -133,7 +133,7 @@ open class CurrencyPresenter(
     }
 
     fun onReloadCurrencyList() {
-        useCase.onReloadCurrencyList(object : PresentationCallback {
+        useCase.reload(object : PresentationCallback {
             override fun onSuccess(listValute: List<CurrencyBody>) {
                 viewState.setListCurrency(listValute)
                 valutes = listValute

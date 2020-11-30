@@ -18,7 +18,7 @@ import com.example.cft_converter.data.CurrencyRepositoryImpl
 import com.example.cft_converter.data.database.RealmDb
 import com.example.cft_converter.data.network.CurrencyRemoteDataSource
 import com.example.cft_converter.data.network.RetrofitService
-import com.example.cft_converter.domain.CurrencyUseCase
+import com.example.cft_converter.domain.RequestListCurrencyUseCase
 import com.example.cft_converter.domain.ICurrencyRepository
 import com.example.cft_converter.domain.entity.CurrencyBody
 import io.realm.Realm
@@ -47,7 +47,7 @@ class CurrencyActivity : MvpAppCompatActivity(), CurrencyView, View.OnClickListe
     private val realmDb = RealmDb(realm)
 
     private val repository: ICurrencyRepository = CurrencyRepositoryImpl(realmDb, network)
-    private val useCase = CurrencyUseCase(repository)
+    private val useCase = RequestListCurrencyUseCase(repository)
 
     private var outputCharCodeView: TextView? = null
     private var inputCharCodeView: TextView? = null
