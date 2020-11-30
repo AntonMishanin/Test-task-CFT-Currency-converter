@@ -71,11 +71,13 @@ open class CurrencyPresenter(
 
     fun onInputCurrencyTextChanged(inputValue: CharSequence) {
         if (inputFromUser) {
-            try {
-                this.inputValue = inputValue.toString().toDouble()
-            } catch (e: NumberFormatException) {
-                this.inputValue = 0.0
+
+            this.inputValue = if (inputValue.toString() == "") {
+                0.0
+            } else {
+                inputValue.toString().toDouble()
             }
+
             userEntersValuesIntoInputField = true
             convertCurrency()
         }
@@ -83,10 +85,11 @@ open class CurrencyPresenter(
 
     fun onOutputCurrencyTextChanged(inputValue: CharSequence) {
         if (inputFromUser) {
-            try {
-                this.inputValue = inputValue.toString().toDouble()
-            } catch (e: NumberFormatException) {
-                this.inputValue = 0.0
+
+            this.inputValue = if (inputValue.toString() == "") {
+                0.0
+            } else {
+                inputValue.toString().toDouble()
             }
             userEntersValuesIntoInputField = false
             convertCurrency()
