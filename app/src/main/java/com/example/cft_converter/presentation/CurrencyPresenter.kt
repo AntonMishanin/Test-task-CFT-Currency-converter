@@ -20,7 +20,6 @@ open class CurrencyPresenter(
     private var outputCurrency = CurrencyBody()
     private var inputValue = 0.0
     private var inputFromUser = true
-    private var userEntersValuesIntoInputField = false
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
@@ -78,7 +77,7 @@ open class CurrencyPresenter(
                 inputValue.toString().toDouble()
             }
 
-            userEntersValuesIntoInputField = true
+            selectCurrency = 0
             convertCurrency()
         }
     }
@@ -91,7 +90,7 @@ open class CurrencyPresenter(
             } else {
                 inputValue.toString().toDouble()
             }
-            userEntersValuesIntoInputField = false
+            selectCurrency = 1
             convertCurrency()
         }
     }
@@ -108,27 +107,33 @@ open class CurrencyPresenter(
 
     private fun convertCurrency() {
         inputFromUser = false
-        if (userEntersValuesIntoInputField) {
-            val outputCurrencyValue = useCase.convertCurrency(
-                inputValue,
-                inputCurrency.Value,
-                inputCurrency.Nominal,
-                outputCurrency.Value,
-                outputCurrency.Nominal
-            )
-            val value = String.format("%.3f", outputCurrencyValue)
-            viewState.setOutputCurrencyValue(value)
-        } else {
-            val outputCurrencyValue = useCase.convertCurrency(
-                inputValue,
-                outputCurrency.Value,
-                outputCurrency.Nominal,
-                inputCurrency.Value,
-                inputCurrency.Nominal
-            )
-            val value = String.format("%.3f", outputCurrencyValue)
-            viewState.setInputCurrencyValue(value)
+
+        when(selectCurrency){
+            0->{
+                val outputCurrencyValue = useCase.convertCurrency(
+                    inputValue,
+                    inputCurrency.Value,
+                    inputCurrency.Nominal,
+                    outputCurrency.Value,
+                    outputCurrency.Nominal
+                )
+                val value = String.format("%.3f", outputCurrencyValue)
+                viewState.setOutputCurrencyValue(value)
+            }
+
+            1->{
+                val outputCurrencyValue = useCase.convertCurrency(
+                    inputValue,
+                    outputCurrency.Value,
+                    outputCurrency.Nominal,
+                    inputCurrency.Value,
+                    inputCurrency.Nominal
+                )
+                val value = String.format("%.3f", outputCurrencyValue)
+                viewState.setInputCurrencyValue(value)
+            }
         }
+
         inputFromUser = true
     }
 
