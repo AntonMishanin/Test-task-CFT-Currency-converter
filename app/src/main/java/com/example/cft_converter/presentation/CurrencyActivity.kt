@@ -16,7 +16,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.cft_converter.R
 import com.example.cft_converter.data.CurrencyRepositoryImpl
 import com.example.cft_converter.data.database.RealmDb
-import com.example.cft_converter.data.network.CurrencyNetwork
+import com.example.cft_converter.data.network.CurrencyRemoteDataSource
 import com.example.cft_converter.data.network.RetrofitService
 import com.example.cft_converter.domain.CurrencyUseCase
 import com.example.cft_converter.domain.ICurrencyRepository
@@ -41,7 +41,7 @@ class CurrencyActivity : MvpAppCompatActivity(), CurrencyView, View.OnClickListe
 
     private val retrofit = RetrofitService()
     private val api = retrofit.provideCurrencyApi(retrofit.provideRetrofit())
-    private val network = CurrencyNetwork(api)
+    private val network = CurrencyRemoteDataSource(api)
 
     private val realm: Realm = Realm.getDefaultInstance()
     private val realmDb = RealmDb(realm)

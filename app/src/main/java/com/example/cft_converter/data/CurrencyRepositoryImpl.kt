@@ -1,7 +1,7 @@
 package com.example.cft_converter.data
 
 import com.example.cft_converter.data.database.RealmDb
-import com.example.cft_converter.data.network.CurrencyNetwork
+import com.example.cft_converter.data.network.CurrencyRemoteDataSource
 import com.example.cft_converter.domain.CurrencyMapper
 import com.example.cft_converter.domain.ICurrencyRepository
 import com.example.cft_converter.domain.callback.RequestFromDbCallback
@@ -14,7 +14,7 @@ import io.realm.RealmResults
 
 class CurrencyRepositoryImpl(
     private val realmDb: RealmDb,
-    private val request: CurrencyNetwork
+    private val request: CurrencyRemoteDataSource
 ) : ICurrencyRepository {
 
     override fun requestListCurrencyFromNetwork(callback: PresentationCallback) {

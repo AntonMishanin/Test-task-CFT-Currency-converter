@@ -7,7 +7,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.observers.DisposableSingleObserver
 import io.reactivex.schedulers.Schedulers
 
-class CurrencyNetwork(private val api: CurrencyApi) {
+class CurrencyRemoteDataSource(private val api: CurrencyApi) {
 
     fun requestListCurrency(callback: NetworkCallback) {
         api.getListOfCurrency()
