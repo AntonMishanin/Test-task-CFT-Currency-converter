@@ -3,6 +3,8 @@ package com.example.cft_converter.presentation
 
 import com.example.cft_converter.domain.RequestListCurrencyUseCase
 import com.example.cft_converter.domain.entity.CurrencyBody
+import com.example.cft_converter.utils.Constants.Companion.SELECT_FIRST_VALUTE
+import com.example.cft_converter.utils.Constants.Companion.SELECT_SECOND_VALUTE
 
 import moxy.InjectViewState
 import moxy.MvpPresenter
@@ -49,13 +51,13 @@ open class CurrencyPresenter(
     fun onItemCurrencyClick(position: Int) {
         when (selectCurrency) {
 
-            0 -> {
+            SELECT_FIRST_VALUTE -> {
                 val charCode = valutes[position].CharCode
                 viewState.setInputCurrencyCharCode(charCode)
                 inputCurrency = valutes[position]
             }
 
-            1 -> {
+            SELECT_SECOND_VALUTE -> {
                 val charCode = valutes[position].CharCode
                 viewState.setOutputCurrencyCharCode(charCode)
                 outputCurrency = valutes[position]
@@ -106,7 +108,7 @@ open class CurrencyPresenter(
         inputFromUser = false
 
         when (selectCurrency) {
-            0 -> {
+            SELECT_FIRST_VALUTE -> {
                 val outputCurrencyValue = useCase.convertCurrency(
                     inputValue,
                     inputCurrency.Value,
@@ -118,7 +120,7 @@ open class CurrencyPresenter(
                 viewState.setOutputCurrencyValue(value)
             }
 
-            1 -> {
+            SELECT_SECOND_VALUTE -> {
                 val outputCurrencyValue = useCase.convertCurrency(
                     inputValue,
                     outputCurrency.Value,
