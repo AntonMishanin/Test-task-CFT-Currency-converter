@@ -1,11 +1,11 @@
 package com.example.cft_converter.domain
 
-import com.example.cft_converter.domain.callback.PresentationCallback
+import com.example.cft_converter.domain.entity.CurrencyBody
 
 class RequestListCurrencyUseCase(private val repository: ICurrencyRepository) {
 
-    fun fromDb(callback: PresentationCallback){
-        repository.requestListCurrencyFromDb(callback)
+    fun fromDb(success: (List<CurrencyBody>) -> Unit, error: (String) -> Unit){
+        repository.requestListCurrencyFromDb(success, error)
     }
 
     fun convertCurrency(
@@ -26,8 +26,9 @@ class RequestListCurrencyUseCase(private val repository: ICurrencyRepository) {
     }
 
     fun reload(
-        callback: PresentationCallback
+        success: (List<CurrencyBody>) -> Unit,
+        error: (String) -> Unit
     ) {
-        repository.requestListCurrencyFromNetwork(callback)
+        repository.requestListCurrencyFromNetwork(success, error)
     }
 }

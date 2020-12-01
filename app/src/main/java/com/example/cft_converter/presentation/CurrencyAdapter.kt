@@ -8,14 +8,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.cft_converter.R
 import com.example.cft_converter.domain.entity.CurrencyBody
 
-class CurrencyAdapter  :
+class CurrencyAdapter(private val onItemClickListener: (Int) -> Unit) :
     RecyclerView.Adapter<CurrencyAdapter.ViewHolder>() {
 
     private var listValute: List<CurrencyBody> = ArrayList()
-    private lateinit var listener: CurrencyClickListener
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val inflater = LayoutInflater.from(parent.context).inflate(R.layout.item_currency, parent, false)
+        val inflater =
+            LayoutInflater.from(parent.context).inflate(R.layout.item_currency, parent, false)
         return ViewHolder(inflater)
     }
 
@@ -23,7 +23,7 @@ class CurrencyAdapter  :
         holder.bind(listValute[position])
 
         holder.itemView.setOnClickListener {
-            listener.onItemClick(position)
+            onItemClickListener(position)
         }
     }
 
@@ -34,13 +34,9 @@ class CurrencyAdapter  :
         notifyDataSetChanged()
     }
 
-    fun setListener(listener: CurrencyClickListener) {
-        this.listener = listener
-    }
-
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
-        var currencyTitleView: TextView? = null
+        private var currencyTitleView: TextView? = null
 
         init {
             currencyTitleView = itemView.findViewById(R.id.textView_item_currency_title)
@@ -50,9 +46,4 @@ class CurrencyAdapter  :
             currencyTitleView?.text = currency.Name
         }
     }
-}
-
-interface CurrencyClickListener {
-
-    fun onItemClick(position: Int)
 }

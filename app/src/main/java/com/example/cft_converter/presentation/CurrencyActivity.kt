@@ -37,7 +37,7 @@ class CurrencyActivity : MvpAppCompatActivity(), CurrencyView, View.OnClickListe
     lateinit var presenter: CurrencyPresenter
 
     private lateinit var currencyListAlertDialog: AlertDialog
-    private var adapter = CurrencyAdapter()
+    private var adapter: CurrencyAdapter? = null
 
     private val retrofit = RetrofitService()
     private val api = retrofit.provideCurrencyApi(retrofit.provideRetrofit())
@@ -99,17 +99,15 @@ class CurrencyActivity : MvpAppCompatActivity(), CurrencyView, View.OnClickListe
             presenter.hideDialog()
         }
 
+        adapter = CurrencyAdapter {
+            presenter.onItemCurrencyClick(it)
+        }
+
         //RecyclerView
         val recyclerViewOrderDetail =
             currencyListView.findViewById<RecyclerView>(R.id.recyclerView_dialog_currency)
         recyclerViewOrderDetail?.layoutManager = LinearLayoutManager(this)
         recyclerViewOrderDetail?.adapter = adapter
-
-        adapter.setListener(object : CurrencyClickListener {
-            override fun onItemClick(position: Int) {
-                presenter.onItemCurrencyClick(position)
-            }
-        })
 
         //TextChangedListener
         inputCurrencyView = findViewById(R.id.editText_currency_input)
@@ -156,7 +154,7 @@ class CurrencyActivity : MvpAppCompatActivity(), CurrencyView, View.OnClickListe
 
     override fun setListCurrency(listValute: List<CurrencyBody>) {
         runOnUiThread {
-            adapter.setListCurrency(listValute)
+            adapter?.setListCurrency(listValute)
         }
     }
 

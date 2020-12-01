@@ -2,7 +2,6 @@ package com.example.cft_converter.presentation
 
 
 import com.example.cft_converter.domain.RequestListCurrencyUseCase
-import com.example.cft_converter.domain.callback.PresentationCallback
 import com.example.cft_converter.domain.entity.CurrencyBody
 
 import moxy.InjectViewState
@@ -25,28 +24,26 @@ open class CurrencyPresenter(
         super.onFirstViewAttach()
         viewState.initView()
 
-        useCase.fromDb(object : PresentationCallback {
-            override fun onSuccess(listValute: List<CurrencyBody>) {
-                viewState.setListCurrency(listValute)
-                valutes = listValute
+        useCase.fromDb({ listValute ->
+            viewState.setListCurrency(listValute)
+            valutes = listValute
 
-                inputCurrency = listValute[0]
-                val charCode1 = valutes[0].CharCode
-                viewState.setInputCurrencyCharCode(charCode1)
-                inputCurrency = valutes[0]
+            inputCurrency = listValute[0]
+            val charCode1 = valutes[0].CharCode
+            viewState.setInputCurrencyCharCode(charCode1)
+            inputCurrency = valutes[0]
 
-                outputCurrency = listValute[1]
-                val charCode2 = valutes[1].CharCode
-                viewState.setOutputCurrencyCharCode(charCode2)
-                outputCurrency = valutes[1]
+            outputCurrency = listValute[1]
+            val charCode2 = valutes[1].CharCode
+            viewState.setOutputCurrencyCharCode(charCode2)
+            outputCurrency = valutes[1]
 
-                viewState.setInputCurrencyValue("1")
-            }
-
-            override fun onError(message: String) {
-                viewState.showListLoadingError(message)
-            }
+            viewState.setInputCurrencyValue("1")
+        }, { message ->
+            viewState.showListLoadingError(message)
         })
+
+
     }
 
     fun onItemCurrencyClick(position: Int) {
@@ -108,8 +105,8 @@ open class CurrencyPresenter(
     private fun convertCurrency() {
         inputFromUser = false
 
-        when(selectCurrency){
-            0->{
+        when (selectCurrency) {
+            0 -> {
                 val outputCurrencyValue = useCase.convertCurrency(
                     inputValue,
                     inputCurrency.Value,
@@ -121,7 +118,7 @@ open class CurrencyPresenter(
                 viewState.setOutputCurrencyValue(value)
             }
 
-            1->{
+            1 -> {
                 val outputCurrencyValue = useCase.convertCurrency(
                     inputValue,
                     outputCurrency.Value,
@@ -138,27 +135,23 @@ open class CurrencyPresenter(
     }
 
     fun onReloadCurrencyList() {
-        useCase.reload(object : PresentationCallback {
-            override fun onSuccess(listValute: List<CurrencyBody>) {
-                viewState.setListCurrency(listValute)
-                valutes = listValute
+        useCase.reload({ listValute ->
+            viewState.setListCurrency(listValute)
+            valutes = listValute
 
-                inputCurrency = listValute[0]
-                val charCode1 = valutes[0].CharCode
-                viewState.setInputCurrencyCharCode(charCode1)
-                inputCurrency = valutes[0]
+            inputCurrency = listValute[0]
+            val charCode1 = valutes[0].CharCode
+            viewState.setInputCurrencyCharCode(charCode1)
+            inputCurrency = valutes[0]
 
-                outputCurrency = listValute[1]
-                val charCode2 = valutes[1].CharCode
-                viewState.setOutputCurrencyCharCode(charCode2)
-                outputCurrency = valutes[1]
+            outputCurrency = listValute[1]
+            val charCode2 = valutes[1].CharCode
+            viewState.setOutputCurrencyCharCode(charCode2)
+            outputCurrency = valutes[1]
 
-                viewState.setInputCurrencyValue("1")
-            }
-
-            override fun onError(message: String) {
-                viewState.showListLoadingError(message)
-            }
+            viewState.setInputCurrencyValue("1")
+        }, { message ->
+            viewState.showListLoadingError(message)
         })
     }
 

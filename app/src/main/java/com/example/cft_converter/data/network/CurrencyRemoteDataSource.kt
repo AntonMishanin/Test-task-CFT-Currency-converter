@@ -1,6 +1,5 @@
 package com.example.cft_converter.data.network
 
-import com.example.cft_converter.domain.callback.NetworkCallback
 import com.example.cft_converter.domain.entity.CurrencyBody
 import com.google.gson.JsonObject
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -9,7 +8,7 @@ import io.reactivex.schedulers.Schedulers
 
 class CurrencyRemoteDataSource(private val api: CurrencyApi) {
 
-    fun requestListCurrency(callback: NetworkCallback) {
+    fun requestListCurrency(success: (List<CurrencyBody>) -> Unit, error: (String) -> Unit) {
         api.getListOfCurrency()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
@@ -31,11 +30,11 @@ class CurrencyRemoteDataSource(private val api: CurrencyApi) {
                         listValute.add(valute)
                     }
 
-                    callback.onSuccess(listValute)
+                    success(listValute)
                 }
 
                 override fun onError(e: Throwable) {
-                   callback.onError(e.message.toString())
+                    error(e.message.toString())
                 }
             })
     }
