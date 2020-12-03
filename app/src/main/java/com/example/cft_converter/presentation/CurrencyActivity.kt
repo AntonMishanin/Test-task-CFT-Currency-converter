@@ -14,14 +14,8 @@ import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cft_converter.R
-import com.example.cft_converter.data.CurrencyRepositoryImpl
-import com.example.cft_converter.data.database.RealmDb
-import com.example.cft_converter.data.network.CurrencyRemoteDataSource
-import com.example.cft_converter.data.network.RetrofitService
-import com.example.cft_converter.domain.RequestListCurrencyUseCase
-import com.example.cft_converter.domain.ICurrencyRepository
+import com.example.cft_converter.di.DependencyFactory
 import com.example.cft_converter.domain.entity.CurrencyBody
-import io.realm.Realm
 import moxy.MvpAppCompatActivity
 import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
@@ -39,23 +33,13 @@ class CurrencyActivity : MvpAppCompatActivity(), CurrencyView, View.OnClickListe
     private lateinit var currencyListAlertDialog: AlertDialog
     private var adapter: CurrencyAdapter? = null
 
-    private val retrofit = RetrofitService()
-    private val api = retrofit.provideCurrencyApi(retrofit.provideRetrofit())
-    private val network = CurrencyRemoteDataSource(api)
-
-    private val realm: Realm = Realm.getDefaultInstance()
-    private val realmDb = RealmDb(realm)
-
-    private val repository: ICurrencyRepository = CurrencyRepositoryImpl(realmDb, network)
-    private val useCase = RequestListCurrencyUseCase(repository)
-
     private var outputCharCodeView: TextView? = null
     private var inputCharCodeView: TextView? = null
     private var outputCurrencyView: EditText? = null
     private var inputCurrencyView: EditText? = null
 
     @ProvidePresenter
-    fun providePresenter() = CurrencyPresenter(useCase)
+    fun providePresenter() = DependencyFactory().provideCurrencyPresenter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
