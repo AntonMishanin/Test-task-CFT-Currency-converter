@@ -5,6 +5,8 @@ import com.example.cft_converter.domain.RequestListCurrencyUseCase
 import com.example.cft_converter.domain.entity.CurrencyBody
 import com.example.cft_converter.utils.Constants.Companion.SELECT_FIRST_VALUTE
 import com.example.cft_converter.utils.Constants.Companion.SELECT_SECOND_VALUTE
+import com.example.cft_converter.utils.toStringWithDot
+import com.example.cft_converter.utils.toValidDouble
 
 import moxy.InjectViewState
 import moxy.MvpPresenter
@@ -69,13 +71,7 @@ open class CurrencyPresenter(
 
     fun onInputCurrencyTextChanged(inputValue: CharSequence) {
         if (inputFromUser) {
-
-            this.inputValue = if (inputValue.toString() == "") {
-                0.0
-            } else {
-                inputValue.toString().toDouble()
-            }
-
+            this.inputValue = inputValue.toValidDouble()
             selectCurrency = 0
             convertCurrency()
         }
@@ -83,12 +79,7 @@ open class CurrencyPresenter(
 
     fun onOutputCurrencyTextChanged(inputValue: CharSequence) {
         if (inputFromUser) {
-
-            this.inputValue = if (inputValue.toString() == "") {
-                0.0
-            } else {
-                inputValue.toString().toDouble()
-            }
+            this.inputValue = inputValue.toValidDouble()
             selectCurrency = 1
             convertCurrency()
         }
@@ -116,8 +107,7 @@ open class CurrencyPresenter(
                     outputCurrency.Value,
                     outputCurrency.Nominal
                 )
-                val value = String.format("%.3f", outputCurrencyValue)
-                viewState.setOutputCurrencyValue(value)
+                viewState.setOutputCurrencyValue(outputCurrencyValue.toStringWithDot())
             }
 
             SELECT_SECOND_VALUTE -> {
@@ -128,8 +118,7 @@ open class CurrencyPresenter(
                     inputCurrency.Value,
                     inputCurrency.Nominal
                 )
-                val value = String.format("%.3f", outputCurrencyValue)
-                viewState.setInputCurrencyValue(value)
+                viewState.setInputCurrencyValue(outputCurrencyValue.toStringWithDot())
             }
         }
 
