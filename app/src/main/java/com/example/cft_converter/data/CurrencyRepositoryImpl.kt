@@ -3,7 +3,7 @@ package com.example.cft_converter.data
 import android.annotation.SuppressLint
 import com.example.cft_converter.data.database.RealmDb
 import com.example.cft_converter.data.network.CurrencyRemoteDataSource
-import com.example.cft_converter.domain.CurrencyMapper
+import com.example.cft_converter.data.mapper.CurrencyMapper
 import com.example.cft_converter.domain.ICurrencyRepository
 import com.example.cft_converter.domain.entity.CurrencyBody
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -30,7 +30,8 @@ class CurrencyRepositoryImpl(
                 if (list.isEmpty()) {
                     requestListCurrencyFromNetwork(success, error)
                 } else {
-                    val mapper = CurrencyMapper()
+                    val mapper =
+                        CurrencyMapper()
                     val currencyEntityList = mapper.mapping(list)
                     success(currencyEntityList)
                 }
