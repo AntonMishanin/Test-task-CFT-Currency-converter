@@ -27,25 +27,25 @@ open class CurrencyPresenter(
         viewState.initView()
 
         useCase.fromDb({ listValute ->
-            viewState.setListCurrency(listValute)
-            valutes = listValute
+            if (listValute.isNotEmpty()) {
+                viewState.setListCurrency(listValute)
+                valutes = listValute
 
-            inputCurrency = listValute[0]
-            val charCode1 = valutes[0].CharCode
-            viewState.setInputCurrencyCharCode(charCode1)
-            inputCurrency = valutes[0]
+                inputCurrency = listValute[0]
+                val charCode1 = valutes[0].CharCode
+                viewState.setInputCurrencyCharCode(charCode1)
+                inputCurrency = valutes[0]
 
-            outputCurrency = listValute[1]
-            val charCode2 = valutes[1].CharCode
-            viewState.setOutputCurrencyCharCode(charCode2)
-            outputCurrency = valutes[1]
+                outputCurrency = listValute[1]
+                val charCode2 = valutes[1].CharCode
+                viewState.setOutputCurrencyCharCode(charCode2)
+                outputCurrency = valutes[1]
 
-            viewState.setInputCurrencyValue("1")
+                viewState.setInputCurrencyValue("1")
+            }
         }, { message ->
             viewState.showListLoadingError(message)
         })
-
-
     }
 
     fun onItemCurrencyClick(position: Int) {
@@ -138,20 +138,22 @@ open class CurrencyPresenter(
 
     fun onReloadCurrencyList() {
         useCase.reload({ listValute ->
-            viewState.setListCurrency(listValute)
-            valutes = listValute
+            if (listValute.isNotEmpty()) {
+                viewState.setListCurrency(listValute)
+                valutes = listValute
 
-            inputCurrency = listValute[0]
-            val charCode1 = valutes[0].CharCode
-            viewState.setInputCurrencyCharCode(charCode1)
-            inputCurrency = valutes[0]
+                inputCurrency = listValute[0]
+                val charCode1 = valutes[0].CharCode
+                viewState.setInputCurrencyCharCode(charCode1)
+                inputCurrency = valutes[0]
 
-            outputCurrency = listValute[1]
-            val charCode2 = valutes[1].CharCode
-            viewState.setOutputCurrencyCharCode(charCode2)
-            outputCurrency = valutes[1]
+                outputCurrency = listValute[1]
+                val charCode2 = valutes[1].CharCode
+                viewState.setOutputCurrencyCharCode(charCode2)
+                outputCurrency = valutes[1]
 
-            viewState.setInputCurrencyValue("1")
+                viewState.setInputCurrencyValue("1")
+            }
         }, { message ->
             viewState.showListLoadingError(message)
         })

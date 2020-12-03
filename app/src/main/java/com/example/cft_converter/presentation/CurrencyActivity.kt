@@ -153,9 +153,7 @@ class CurrencyActivity : MvpAppCompatActivity(), CurrencyView, View.OnClickListe
     }
 
     override fun setListCurrency(listValute: List<CurrencyBody>) {
-        runOnUiThread {
-            adapter?.setListCurrency(listValute)
-        }
+        adapter?.setListCurrency(listValute)
     }
 
     override fun showDialog() {
@@ -167,27 +165,19 @@ class CurrencyActivity : MvpAppCompatActivity(), CurrencyView, View.OnClickListe
     }
 
     override fun setInputCurrencyValue(currencyValue: String) {
-        runOnUiThread {
-            inputCurrencyView?.setText(currencyValue)
-        }
+        inputCurrencyView?.setText(currencyValue)
     }
 
     override fun setOutputCurrencyValue(currencyValue: String) {
-        runOnUiThread {
-            outputCurrencyView?.setText(currencyValue)
-        }
+        outputCurrencyView?.setText(currencyValue)
     }
 
     override fun setInputCurrencyCharCode(charCode: String) {
-        runOnUiThread {
-            inputCharCodeView?.text = charCode
-        }
+        inputCharCodeView?.text = charCode
     }
 
     override fun setOutputCurrencyCharCode(charCode: String) {
-        runOnUiThread {
-            outputCharCodeView?.text = charCode
-        }
+        outputCharCodeView?.text = charCode
     }
 
     override fun showListLoadingError(errorMessage: String) {
