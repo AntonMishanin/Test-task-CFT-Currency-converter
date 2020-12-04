@@ -13,8 +13,8 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.cft_converter.App
 import com.example.cft_converter.R
-import com.example.cft_converter.di.DependencyFactory
 import com.example.cft_converter.domain.entity.CurrencyBody
 import moxy.MvpAppCompatActivity
 import moxy.presenter.InjectPresenter
@@ -39,7 +39,7 @@ class CurrencyActivity : MvpAppCompatActivity(), CurrencyView, View.OnClickListe
     private var inputCurrencyView: EditText? = null
 
     @ProvidePresenter
-    fun providePresenter() = DependencyFactory().provideCurrencyPresenter()
+    fun providePresenter() = (application as App).dependencyFactory.provideCurrencyPresenter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
