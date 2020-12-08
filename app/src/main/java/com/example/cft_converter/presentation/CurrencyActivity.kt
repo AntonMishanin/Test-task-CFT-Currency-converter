@@ -47,6 +47,7 @@ class CurrencyActivity : MvpAppCompatActivity(), CurrencyView, View.OnClickListe
     @ProvidePresenter
     fun providePresenter() = presenter
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         presenter = DaggerCurrencyComponent.builder()
             .realmModule(RealmModule(this))
