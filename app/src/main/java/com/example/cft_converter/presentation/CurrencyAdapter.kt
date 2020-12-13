@@ -1,25 +1,30 @@
 package com.example.cft_converter.presentation
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cft_converter.R
 import com.example.cft_converter.domain.entity.CurrencyBody
 
-class CurrencyAdapter  :
+class CurrencyAdapter(private val onItemClickListener: (Int) -> Unit) :
     RecyclerView.Adapter<CurrencyAdapter.ViewHolder>() {
 
     private var listValute: List<CurrencyBody> = ArrayList()
-    private lateinit var listener: CurrencyClickListener
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val inflater = LayoutInflater.from(parent.context)
-        return ViewHolder(inflater, parent)
+        val inflater =
+            LayoutInflater.from(parent.context).inflate(R.layout.item_currency, parent, false)
+        return ViewHolder(inflater)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(listValute[position], position)
+        holder.bind(listValute[position])
+
+        holder.itemView.setOnClickListener {
+            onItemClickListener(position)
+        }
     }
 
     override fun getItemCount(): Int = listValute.size
@@ -29,29 +34,16 @@ class CurrencyAdapter  :
         notifyDataSetChanged()
     }
 
-    fun setListener(listener: CurrencyClickListener) {
-        this.listener = listener
-    }
+    inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
-    inner class ViewHolder(inflater: LayoutInflater, parent: ViewGroup) :
-        RecyclerView.ViewHolder(inflater.inflate(R.layout.item_currency, parent, false)) {
         private var currencyTitleView: TextView? = null
 
         init {
             currencyTitleView = itemView.findViewById(R.id.textView_item_currency_title)
         }
 
-        fun bind(currency: CurrencyBody, position: Int) {
+        fun bind(currency: CurrencyBody) {
             currencyTitleView?.text = currency.Name
-
-            itemView.setOnClickListener {
-                listener.onItemClick(position)
-            }
         }
     }
-}
-
-interface CurrencyClickListener {
-
-    fun onItemClick(position: Int)
 }

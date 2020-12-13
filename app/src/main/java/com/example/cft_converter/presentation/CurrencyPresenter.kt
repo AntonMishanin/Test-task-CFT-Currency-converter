@@ -1,17 +1,19 @@
 package com.example.cft_converter.presentation
 
 
-import com.example.cft_converter.domain.CurrencyUseCase
-import com.example.cft_converter.domain.callback.PresentationCallback
+import com.example.cft_converter.domain.RequestListCurrencyUseCase
 import com.example.cft_converter.domain.entity.CurrencyBody
-import com.example.cft_converter.utils.GetDoubleFromString
+import com.example.cft_converter.utils.Constants.Companion.SELECT_FIRST_VALUTE
+import com.example.cft_converter.utils.Constants.Companion.SELECT_SECOND_VALUTE
+import com.example.cft_converter.utils.toStringWithDot
+import com.example.cft_converter.utils.toValidDouble
 
 import moxy.InjectViewState
 import moxy.MvpPresenter
 
 @InjectViewState
 open class CurrencyPresenter(
-    private val useCase: CurrencyUseCase
+    private val useCase: RequestListCurrencyUseCase
 ) : MvpPresenter<CurrencyView>() {
 
     private lateinit var valutes: List<CurrencyBody>
@@ -20,16 +22,14 @@ open class CurrencyPresenter(
     private var inputCurrency = CurrencyBody()
     private var outputCurrency = CurrencyBody()
     private var inputValue = 0.0
-    private var inputCurrencyValueNow = false
-    private var inputCurrencyValueChanged = false
+    private var inputFromUser = true
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
         viewState.initView()
-        viewState.hideInputError()
 
-        useCase.requestListCurrencyFromDb(object : PresentationCallback {
-            override fun onSuccess(listValute: List<CurrencyBody>) {
+        useCase.fromDb({ listValute ->
+            if (listValute.isNotEmpty()) {
                 viewState.setListCurrency(listValute)
                 valutes = listValute
 
@@ -45,23 +45,21 @@ open class CurrencyPresenter(
 
                 viewState.setInputCurrencyValue("1")
             }
-
-            override fun onError(message: String) {
-                viewState.showListLoadingError(message)
-            }
+        }, { message ->
+            viewState.showListLoadingError(message)
         })
     }
 
     fun onItemCurrencyClick(position: Int) {
         when (selectCurrency) {
 
-            0 -> {
+            SELECT_FIRST_VALUTE -> {
                 val charCode = valutes[position].CharCode
                 viewState.setInputCurrencyCharCode(charCode)
                 inputCurrency = valutes[position]
             }
 
-            1 -> {
+            SELECT_SECOND_VALUTE -> {
                 val charCode = valutes[position].CharCode
                 viewState.setOutputCurrencyCharCode(charCode)
                 outputCurrency = valutes[position]
@@ -71,44 +69,19 @@ open class CurrencyPresenter(
         viewState.hideDialog()
     }
 
-    fun onInputCurrencyTextChanged(inputValue: String) {
-        if (inputCurrencyValueNow) {
-            return
-        }
-        val inputDouble = GetDoubleFromString.invoke(inputValue)
-
-        if (inputDouble == null) {
-            viewState.showInputError()
-        } else {
-            try {
-                viewState.hideInputError()
-                this.inputValue = inputValue.toDouble()
-                inputCurrencyValueChanged = true
-                convertCurrency()
-            } catch (e: NumberFormatException) {
-                viewState.showInputError()
-            }
+    fun onInputCurrencyTextChanged(inputValue: CharSequence) {
+        if (inputFromUser) {
+            this.inputValue = inputValue.toValidDouble()
+            selectCurrency = 0
+            convertCurrency()
         }
     }
 
-    fun onOutputCurrencyTextChanged(inputValue: String) {
-        if (inputCurrencyValueNow) {
-            return
-        }
-
-        val inputDouble = GetDoubleFromString.invoke(inputValue)
-
-        if (inputDouble == null) {
-            viewState.showInputError()
-        } else {
-            try {
-                viewState.hideInputError()
-                this.inputValue = inputValue.toDouble()
-                inputCurrencyValueChanged = false
-                convertCurrency()
-            } catch (e: NumberFormatException) {
-                viewState.showInputError()
-            }
+    fun onOutputCurrencyTextChanged(inputValue: CharSequence) {
+        if (inputFromUser) {
+            this.inputValue = inputValue.toValidDouble()
+            selectCurrency = 1
+            convertCurrency()
         }
     }
 
@@ -123,34 +96,38 @@ open class CurrencyPresenter(
     }
 
     private fun convertCurrency() {
-        inputCurrencyValueNow = true
-        if (inputCurrencyValueChanged) {
-            val outputCurrencyValue = useCase.convertCurrency(
-                inputValue,
-                inputCurrency.Value,
-                inputCurrency.Nominal,
-                outputCurrency.Value,
-                outputCurrency.Nominal
-            )
-            val value = String.format("%.3f", outputCurrencyValue)
-            viewState.setOutputCurrencyValue(value)
-        } else {
-            val outputCurrencyValue = useCase.convertCurrency(
-                inputValue,
-                outputCurrency.Value,
-                outputCurrency.Nominal,
-                inputCurrency.Value,
-                inputCurrency.Nominal
-            )
-            val value = String.format("%.3f", outputCurrencyValue)
-            viewState.setInputCurrencyValue(value)
+        inputFromUser = false
+
+        when (selectCurrency) {
+            SELECT_FIRST_VALUTE -> {
+                val outputCurrencyValue = useCase.convertCurrency(
+                    inputValue,
+                    inputCurrency.Value,
+                    inputCurrency.Nominal,
+                    outputCurrency.Value,
+                    outputCurrency.Nominal
+                )
+                viewState.setOutputCurrencyValue(outputCurrencyValue.toStringWithDot())
+            }
+
+            SELECT_SECOND_VALUTE -> {
+                val outputCurrencyValue = useCase.convertCurrency(
+                    inputValue,
+                    outputCurrency.Value,
+                    outputCurrency.Nominal,
+                    inputCurrency.Value,
+                    inputCurrency.Nominal
+                )
+                viewState.setInputCurrencyValue(outputCurrencyValue.toStringWithDot())
+            }
         }
-        inputCurrencyValueNow = false
+
+        inputFromUser = true
     }
 
     fun onReloadCurrencyList() {
-        useCase.onReloadCurrencyList(object : PresentationCallback {
-            override fun onSuccess(listValute: List<CurrencyBody>) {
+        useCase.reload({ listValute ->
+            if (listValute.isNotEmpty()) {
                 viewState.setListCurrency(listValute)
                 valutes = listValute
 
@@ -166,10 +143,8 @@ open class CurrencyPresenter(
 
                 viewState.setInputCurrencyValue("1")
             }
-
-            override fun onError(message: String) {
-                viewState.showListLoadingError(message)
-            }
+        }, { message ->
+            viewState.showListLoadingError(message)
         })
     }
 

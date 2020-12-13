@@ -1,17 +1,20 @@
 package com.example.cft_converter
 
 import android.app.Application
-import io.realm.Realm
-import io.realm.RealmConfiguration
+import com.example.cft_converter.di.CurrencyComponent
+import com.example.cft_converter.di.DaggerCurrencyComponent
+import com.example.cft_converter.di.RealmModule
 
-@Suppress("unused")
-open class App: Application() {
+open class App : Application() {
+
+    lateinit var currencyComponent: CurrencyComponent
+        private set
 
     override fun onCreate() {
         super.onCreate()
 
-        Realm.init(this)
-        val configuration: RealmConfiguration = RealmConfiguration.Builder().build()
-        Realm.setDefaultConfiguration(configuration)
+        currencyComponent = DaggerCurrencyComponent.builder()
+            .realmModule(RealmModule(this))
+            .build()
     }
 }

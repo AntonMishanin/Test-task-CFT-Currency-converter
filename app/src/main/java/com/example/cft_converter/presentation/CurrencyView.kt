@@ -24,10 +24,6 @@ interface CurrencyView: MvpView {
 
     fun setOutputCurrencyCharCode(charCode: String)
 
-    fun showInputError()
-
-    fun hideInputError()
-
     fun showListLoadingError(errorMessage: String)
 
 }

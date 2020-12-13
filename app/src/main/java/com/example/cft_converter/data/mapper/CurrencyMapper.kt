@@ -1,4 +1,4 @@
-package com.example.cft_converter.domain
+package com.example.cft_converter.data.mapper
 
 import com.example.cft_converter.domain.entity.CurrencyBody
 import com.example.cft_converter.domain.entity.CurrencyEntityDb
