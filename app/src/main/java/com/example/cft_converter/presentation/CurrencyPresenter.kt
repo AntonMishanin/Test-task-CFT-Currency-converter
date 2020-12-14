@@ -33,7 +33,11 @@ open class CurrencyPresenter(
         viewState.initView()
 
         requestListCurrencyUseCase.invoke({ listValute ->
-            if (listValute.isNotEmpty()) {
+            if (listValute.isEmpty()) {
+                viewState.showPlaceholderNoInternetConnection()
+            } else {
+                viewState.hidePlaceholderNoInternetConnection()
+
                 viewState.setListCurrency(listValute)
                 valutes = listValute
 

@@ -39,6 +39,8 @@ class CurrencyActivity : MvpAppCompatActivity(), CurrencyView, View.OnClickListe
     private var outputCurrencyView: EditText? = null
     private var inputCurrencyView: EditText? = null
 
+    private var layoutNoInternetConnection: View? = null
+
     @ProvidePresenter
     fun providePresenter() = presenter
 
@@ -69,6 +71,8 @@ class CurrencyActivity : MvpAppCompatActivity(), CurrencyView, View.OnClickListe
     @SuppressLint("InflateParams")
     @Suppress("DEPRECATION")
     override fun initView() {
+        layoutNoInternetConnection = findViewById(R.id.layout_no_internet_connection)
+
         outputCharCodeView = findViewById(R.id.textView_output_currency_char_code)
         inputCharCodeView = findViewById(R.id.textView_input_currency_char_code)
 
@@ -169,5 +173,13 @@ class CurrencyActivity : MvpAppCompatActivity(), CurrencyView, View.OnClickListe
 
     override fun showListLoadingError(errorMessage: String) {
         Toast.makeText(this, errorMessage, Toast.LENGTH_LONG).show()
+    }
+
+    override fun showPlaceholderNoInternetConnection() {
+        layoutNoInternetConnection?.visibility = View.VISIBLE
+    }
+
+    override fun hidePlaceholderNoInternetConnection() {
+        layoutNoInternetConnection?.visibility = View.GONE
     }
 }
