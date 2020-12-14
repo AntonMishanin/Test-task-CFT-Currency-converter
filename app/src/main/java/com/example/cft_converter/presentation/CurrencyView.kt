@@ -26,4 +26,7 @@ interface CurrencyView: MvpView {
 
     fun showListLoadingError(errorMessage: String)
 
+    fun showPlaceholderNoInternetConnection()
+
+    fun hidePlaceholderNoInternetConnection()
 }

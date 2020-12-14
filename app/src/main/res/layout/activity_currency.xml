@@ -11,8 +11,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:hint="@string/input_value"
-        android:padding="8dp"
         android:inputType="numberDecimal"
+        android:padding="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -31,7 +31,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.26"
-        tools:ignore="Autofill,LabelFor,TextFields"/>
+        tools:ignore="Autofill,LabelFor,TextFields" />
 
     <ImageButton
         android:id="@+id/imageButton_select_input_currency"
@@ -96,5 +96,15 @@
         app:layout_constraintVertical_bias="0.98"
         app:srcCompat="@android:drawable/ic_popup_sync"
         tools:ignore="ContentDescription" />
+
+    <include
+        android:id="@+id/layout_no_internet_connection"
+        layout="@layout/layout_no_internet_connection"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/imageButton_reload_list"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

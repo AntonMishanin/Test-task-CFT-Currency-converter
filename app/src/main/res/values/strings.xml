@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">CFT-converter</string>
     <string name="input_value">Введите значение</string>
+    <string name="internet_disconnect">Не удалось загрузить список. Проверьте соединение с интернетом</string>
 </resources>
