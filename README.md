@@ -7,3 +7,4 @@ Currency converter is a small test task application, based on Clean Architecture
 - Fetching data from the network with Retrofit.
 - Moxy.
 - Realm.
+- Dagger.
