@@ -1,8 +1,10 @@
 package com.example.cft_converter.presentation
 
 
-import com.example.cft_converter.domain.RequestListCurrencyUseCase
 import com.example.cft_converter.domain.entity.CurrencyBody
+import com.example.cft_converter.domain.usecase.ConvertCurrencyUseCase
+import com.example.cft_converter.domain.usecase.ReloadListCurrencyUseCase
+import com.example.cft_converter.domain.usecase.RequestListCurrencyUseCase
 import com.example.cft_converter.utils.Constants.Companion.SELECT_FIRST_VALUTE
 import com.example.cft_converter.utils.Constants.Companion.SELECT_SECOND_VALUTE
 import com.example.cft_converter.utils.toStringWithDot
@@ -13,7 +15,9 @@ import moxy.MvpPresenter
 
 @InjectViewState
 open class CurrencyPresenter(
-    private val useCase: RequestListCurrencyUseCase
+    private val requestListCurrencyUseCase: RequestListCurrencyUseCase,
+    private val convertCurrencyUseCase: ConvertCurrencyUseCase,
+    private val reloadListCurrencyUseCase: ReloadListCurrencyUseCase
 ) : MvpPresenter<CurrencyView>() {
 
     private lateinit var valutes: List<CurrencyBody>
@@ -28,7 +32,7 @@ open class CurrencyPresenter(
         super.onFirstViewAttach()
         viewState.initView()
 
-        useCase.fromDb({ listValute ->
+        requestListCurrencyUseCase.invoke({ listValute ->
             if (listValute.isNotEmpty()) {
                 viewState.setListCurrency(listValute)
                 valutes = listValute
@@ -100,7 +104,7 @@ open class CurrencyPresenter(
 
         when (selectCurrency) {
             SELECT_FIRST_VALUTE -> {
-                val outputCurrencyValue = useCase.convertCurrency(
+                val outputCurrencyValue = convertCurrencyUseCase.invoke(
                     inputValue,
                     inputCurrency.Value,
                     inputCurrency.Nominal,
@@ -111,7 +115,7 @@ open class CurrencyPresenter(
             }
 
             SELECT_SECOND_VALUTE -> {
-                val outputCurrencyValue = useCase.convertCurrency(
+                val outputCurrencyValue = convertCurrencyUseCase.invoke(
                     inputValue,
                     outputCurrency.Value,
                     outputCurrency.Nominal,
@@ -126,7 +130,7 @@ open class CurrencyPresenter(
     }
 
     fun onReloadCurrencyList() {
-        useCase.reload({ listValute ->
+        reloadListCurrencyUseCase.invoke({ listValute ->
             if (listValute.isNotEmpty()) {
                 viewState.setListCurrency(listValute)
                 valutes = listValute
