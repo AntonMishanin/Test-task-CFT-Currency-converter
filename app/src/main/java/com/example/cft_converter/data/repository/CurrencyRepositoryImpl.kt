@@ -1,7 +1,5 @@
 package com.example.cft_converter.data.repository
 
-import com.example.cft_converter.data.local_data_source.LocalDataSource
-import com.example.cft_converter.data.remote_data_source.RemoteDataSource
 import com.example.cft_converter.data.mapper.CurrencyMapper
 import com.example.cft_converter.data.mapper.JsonMapper
 import com.example.cft_converter.domain.CurrencyRepository

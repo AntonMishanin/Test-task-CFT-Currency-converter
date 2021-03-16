@@ -1,12 +1,12 @@
 package com.example.cft_converter.data.mapper
 
 import com.example.cft_converter.domain.entity.CurrencyEntity
-import com.example.cft_converter.data.dto.LocalCurrencyEntity
+import com.example.cft_converter.data.dto.LocalCurrencyDto
 import io.realm.RealmResults
 
 class CurrencyMapper {
 
-    fun mapping(inputList: RealmResults<LocalCurrencyEntity>): List<CurrencyEntity> {
+    fun mapping(inputList: RealmResults<LocalCurrencyDto>): List<CurrencyEntity> {
 
         val outputList: MutableList<CurrencyEntity> = ArrayList()
         for (i in inputList.indices) {

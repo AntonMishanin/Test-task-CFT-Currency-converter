@@ -1,13 +1,14 @@
 package com.example.cft_converter.data.remote_data_source
 
+import com.example.cft_converter.data.repository.RemoteDataSource
 import com.google.gson.JsonObject
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.observers.DisposableSingleObserver
 import io.reactivex.schedulers.Schedulers
 
-class RemoteDataSource(private val api: CurrencyApi) {
+class RemoteDataSourceImpl(private val api: CurrencyApi): RemoteDataSource {
 
-    fun requestFreshListOfCurrencies(
+    override fun requestFreshListOfCurrencies(
         success: (JsonObject) -> Unit,
         error: (Throwable) -> Unit
     ) {

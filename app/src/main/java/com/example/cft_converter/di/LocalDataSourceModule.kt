@@ -1,7 +1,8 @@
 package com.example.cft_converter.di
 
 import android.content.Context
-import com.example.cft_converter.data.local_data_source.LocalDataSource
+import com.example.cft_converter.data.local_data_source.LocalDataSourceImpl
+import com.example.cft_converter.data.repository.LocalDataSource
 import dagger.Module
 import dagger.Provides
 import io.realm.Realm
@@ -18,7 +19,7 @@ class LocalDataSourceModule(context: Context) {
 
     @Provides
     fun provideLocalDataSource(realm: Realm): LocalDataSource {
-        return LocalDataSource(realm)
+        return LocalDataSourceImpl(realm)
     }
 
     @Singleton

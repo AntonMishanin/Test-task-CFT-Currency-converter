@@ -2,7 +2,7 @@ package com.example.cft_converter.data.dto
 
 import io.realm.RealmObject
 
-open class LocalCurrencyEntity (
+open class LocalCurrencyDto (
     var charCode: String? = "",
     var nominal: Int? = 0,
     var name: String? = "",
