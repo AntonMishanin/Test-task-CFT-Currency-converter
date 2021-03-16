@@ -1,20 +1,20 @@
 package com.example.cft_converter.data.mapper
 
-import com.example.cft_converter.domain.entity.CurrencyBody
-import com.example.cft_converter.domain.entity.CurrencyEntityDb
+import com.example.cft_converter.domain.entity.CurrencyEntity
+import com.example.cft_converter.domain.entity.LocalCurrencyEntity
 import io.realm.RealmResults
 
 class CurrencyMapper {
 
-    fun mapping(inputList: RealmResults<CurrencyEntityDb>): List<CurrencyBody> {
+    fun mapping(inputList: RealmResults<LocalCurrencyEntity>): List<CurrencyEntity> {
 
-        val outputList: MutableList<CurrencyBody> = ArrayList()
+        val outputList: MutableList<CurrencyEntity> = ArrayList()
         for (i in inputList.indices) {
-            val currency = CurrencyBody()
-            currency.Nominal = inputList[i]?.nominal ?: 0
-            currency.Value = inputList[i]?.value ?: 0.0
-            currency.Name = inputList[i]?.name ?: ""
-            currency.CharCode = inputList[i]?.charCode ?: ""
+            val currency = CurrencyEntity()
+            currency.nominal = inputList[i]?.nominal ?: 0
+            currency.value = inputList[i]?.value ?: 0.0
+            currency.name = inputList[i]?.name ?: ""
+            currency.charCode = inputList[i]?.charCode ?: ""
 
             outputList.add(currency)
         }

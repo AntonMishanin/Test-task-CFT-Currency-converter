@@ -1,6 +1,6 @@
 package com.example.cft_converter.presenters
 
-import com.example.cft_converter.domain.entity.CurrencyBody
+import com.example.cft_converter.domain.entity.CurrencyEntity
 import moxy.MvpView
 import moxy.viewstate.strategy.AddToEndSingleStrategy
 import moxy.viewstate.strategy.StateStrategyType
@@ -10,7 +10,7 @@ interface CurrencyView: MvpView {
 
     fun initView()
 
-    fun setListOfCurrencies(listOfCurrencies: List<CurrencyBody>)
+    fun setListOfCurrencies(listOfCurrencyEntities: List<CurrencyEntity>)
 
     fun showCurrencySelectionDialog()
 

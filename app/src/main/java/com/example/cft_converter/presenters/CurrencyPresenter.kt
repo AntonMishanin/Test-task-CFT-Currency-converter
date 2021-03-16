@@ -1,7 +1,7 @@
 package com.example.cft_converter.presenters
 
 
-import com.example.cft_converter.domain.entity.CurrencyBody
+import com.example.cft_converter.domain.entity.CurrencyEntity
 import com.example.cft_converter.domain.use_case.ConvertCurrencyUseCase
 import com.example.cft_converter.domain.use_case.RequestFreshListOfCurrenciesUseCase
 import com.example.cft_converter.domain.use_case.RequestListOfCurrenciesUseCase
@@ -23,11 +23,11 @@ open class CurrencyPresenter(
 
     private var compositeDisposable: CompositeDisposable? = null
 
-    private lateinit var listOfCurrencies: List<CurrencyBody>
+    private lateinit var listOfCurrencyEntities: List<CurrencyEntity>
     private var selectCurrency = 0
 
-    private var inputCurrency = CurrencyBody()
-    private var outputCurrency = CurrencyBody()
+    private var inputCurrency = CurrencyEntity()
+    private var outputCurrency = CurrencyEntity()
     private var inputValue = 0.0
     private var inputCurrencyValueFromUser = true
 
@@ -45,17 +45,17 @@ open class CurrencyPresenter(
                 viewState.hideFailLayout()
 
                 viewState.setListOfCurrencies(inputListOfCurrencies)
-                listOfCurrencies = inputListOfCurrencies
+                listOfCurrencyEntities = inputListOfCurrencies
 
                 inputCurrency = inputListOfCurrencies[0]
-                val charCode1 = listOfCurrencies[0].CharCode
+                val charCode1 = listOfCurrencyEntities[0].charCode
                 viewState.setInputCurrencyCharCode(charCode1)
-                inputCurrency = listOfCurrencies[0]
+                inputCurrency = listOfCurrencyEntities[0]
 
                 outputCurrency = inputListOfCurrencies[1]
-                val charCode2 = listOfCurrencies[1].CharCode
+                val charCode2 = listOfCurrencyEntities[1].charCode
                 viewState.setOutputCurrencyCharCode(charCode2)
-                outputCurrency = listOfCurrencies[1]
+                outputCurrency = listOfCurrencyEntities[1]
 
                 viewState.setInputCurrencyValue("1")
             }
@@ -76,15 +76,15 @@ open class CurrencyPresenter(
         when (selectCurrency) {
 
             SELECT_FIRST_VALUTE -> {
-                val charCode = listOfCurrencies[position].CharCode
+                val charCode = listOfCurrencyEntities[position].charCode
                 viewState.setInputCurrencyCharCode(charCode)
-                inputCurrency = listOfCurrencies[position]
+                inputCurrency = listOfCurrencyEntities[position]
             }
 
             SELECT_SECOND_VALUTE -> {
-                val charCode = listOfCurrencies[position].CharCode
+                val charCode = listOfCurrencyEntities[position].charCode
                 viewState.setOutputCurrencyCharCode(charCode)
-                outputCurrency = listOfCurrencies[position]
+                outputCurrency = listOfCurrencyEntities[position]
             }
         }
         convertCurrency()
@@ -124,10 +124,10 @@ open class CurrencyPresenter(
             SELECT_FIRST_VALUTE -> {
                 val outputCurrencyValue = convertCurrencyUseCase(
                     inputValue,
-                    inputCurrency.Value,
-                    inputCurrency.Nominal,
-                    outputCurrency.Value,
-                    outputCurrency.Nominal
+                    inputCurrency.value,
+                    inputCurrency.nominal,
+                    outputCurrency.value,
+                    outputCurrency.nominal
                 )
                 viewState.setOutputCurrencyValue(outputCurrencyValue.toStringWithDot())
             }
@@ -135,10 +135,10 @@ open class CurrencyPresenter(
             SELECT_SECOND_VALUTE -> {
                 val outputCurrencyValue = convertCurrencyUseCase(
                     inputValue,
-                    outputCurrency.Value,
-                    outputCurrency.Nominal,
-                    inputCurrency.Value,
-                    inputCurrency.Nominal
+                    outputCurrency.value,
+                    outputCurrency.nominal,
+                    inputCurrency.value,
+                    inputCurrency.nominal
                 )
                 viewState.setInputCurrencyValue(outputCurrencyValue.toStringWithDot())
             }

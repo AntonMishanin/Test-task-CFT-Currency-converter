@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cft_converter.App
 import com.example.cft_converter.R
-import com.example.cft_converter.domain.entity.CurrencyBody
+import com.example.cft_converter.domain.entity.CurrencyEntity
 import com.example.cft_converter.presenters.CurrencyPresenter
 import com.example.cft_converter.presenters.CurrencyView
 import com.example.cft_converter.utils.afterTextChanged
@@ -105,8 +105,8 @@ class CurrencyActivity : MvpAppCompatActivity(), CurrencyView {
         currencyRecyclerView?.adapter = adapter
     }
 
-    override fun setListOfCurrencies(listOfCurrencies: List<CurrencyBody>) {
-        adapter?.listOfCurrencies = listOfCurrencies
+    override fun setListOfCurrencies(listOfCurrencyEntities: List<CurrencyEntity>) {
+        adapter?.listOfCurrencyEntities = listOfCurrencyEntities
     }
 
     override fun showCurrencySelectionDialog() = currencySelectionDialog.show()

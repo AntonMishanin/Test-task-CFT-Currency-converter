@@ -4,7 +4,7 @@ import android.view.View
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cft_converter.R
-import com.example.cft_converter.domain.entity.CurrencyBody
+import com.example.cft_converter.domain.entity.CurrencyEntity
 
 class CurrencyViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
@@ -14,7 +14,7 @@ class CurrencyViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         currencyTitleView = itemView.findViewById(R.id.textView_item_currency_title)
     }
 
-    fun bind(currency: CurrencyBody) {
-        currencyTitleView?.text = currency.Name
+    fun bind(currencyEntity: CurrencyEntity) {
+        currencyTitleView?.text = currencyEntity.name
     }
 }
