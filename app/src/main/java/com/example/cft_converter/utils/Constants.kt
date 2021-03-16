@@ -11,5 +11,6 @@ class Constants {
         const val SELECT_SECOND_VALUTE = 1
 
         const val CURRENCY_API_BASE_URL = "https://www.cbr-xml-daily.ru"
+        const val CURRENCY_LIST_API_END_POINT = "/daily_json.js"
     }
 }

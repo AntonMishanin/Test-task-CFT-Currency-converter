@@ -1,4 +1,4 @@
-package com.example.cft_converter.data.network
+package com.example.cft_converter.data.remote_data_source
 
 import com.example.cft_converter.domain.entity.CurrencyBody
 import com.google.gson.JsonObject
@@ -6,10 +6,13 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.observers.DisposableSingleObserver
 import io.reactivex.schedulers.Schedulers
 
-class CurrencyRemoteDataSource(private val api: CurrencyApi) {
+class RemoteDataSource(private val api: CurrencyApi) {
 
-    fun requestListCurrency(success: (List<CurrencyBody>) -> Unit, error: (String) -> Unit) {
-        api.getListOfCurrency()
+    fun requestFreshListOfCurrencies(
+        success: (List<CurrencyBody>) -> Unit,
+        error: (Throwable) -> Unit
+    ) {
+        api.requestListOfCurrencies()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(object : DisposableSingleObserver<JsonObject>() {
@@ -34,7 +37,7 @@ class CurrencyRemoteDataSource(private val api: CurrencyApi) {
                 }
 
                 override fun onError(e: Throwable) {
-                    error(e.message.toString())
+                    error(e)
                 }
             })
     }

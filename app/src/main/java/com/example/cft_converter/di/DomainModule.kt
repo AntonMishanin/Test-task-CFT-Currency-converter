@@ -1,10 +1,10 @@
 package com.example.cft_converter.di
 
 import com.example.cft_converter.domain.CurrencyConverter
-import com.example.cft_converter.domain.ICurrencyRepository
-import com.example.cft_converter.domain.usecase.ConvertCurrencyUseCase
-import com.example.cft_converter.domain.usecase.ReloadListCurrencyUseCase
-import com.example.cft_converter.domain.usecase.RequestListCurrencyUseCase
+import com.example.cft_converter.domain.CurrencyRepository
+import com.example.cft_converter.domain.use_case.ConvertCurrencyUseCase
+import com.example.cft_converter.domain.use_case.RequestFreshListOfCurrenciesUseCase
+import com.example.cft_converter.domain.use_case.RequestListOfCurrenciesUseCase
 import dagger.Module
 import dagger.Provides
 
@@ -12,21 +12,18 @@ import dagger.Provides
 class DomainModule {
 
     @Provides
-    fun provideRequestListCurrencyUseCase(currencyRepository: ICurrencyRepository): RequestListCurrencyUseCase {
-        return RequestListCurrencyUseCase(currencyRepository)
+    fun provideRequestListCurrencyUseCase(currencyRepository: CurrencyRepository): RequestListOfCurrenciesUseCase {
+        return RequestListOfCurrenciesUseCase(currencyRepository)
     }
 
     @Provides
-    fun provideReloadListCurrencyUseCase(currencyRepository: ICurrencyRepository): ReloadListCurrencyUseCase {
-        return ReloadListCurrencyUseCase(currencyRepository)
+    fun provideReloadListCurrencyUseCase(currencyRepository: CurrencyRepository): RequestFreshListOfCurrenciesUseCase {
+        return RequestFreshListOfCurrenciesUseCase(currencyRepository)
     }
 
     @Provides
-    fun provideConvertCurrencyUseCase(
-        currencyRepository: ICurrencyRepository,
-        converter: CurrencyConverter
-    ): ConvertCurrencyUseCase {
-        return ConvertCurrencyUseCase(currencyRepository, converter)
+    fun provideConvertCurrencyUseCase(converter: CurrencyConverter): ConvertCurrencyUseCase {
+        return ConvertCurrencyUseCase(converter)
     }
 
     @Provides

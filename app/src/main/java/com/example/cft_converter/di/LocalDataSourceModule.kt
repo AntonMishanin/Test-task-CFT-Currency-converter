@@ -1,7 +1,7 @@
 package com.example.cft_converter.di
 
 import android.content.Context
-import com.example.cft_converter.data.database.RealmDb
+import com.example.cft_converter.data.local_data_source.LocalDataSource
 import dagger.Module
 import dagger.Provides
 import io.realm.Realm
@@ -10,15 +10,15 @@ import java.lang.Exception
 import javax.inject.Singleton
 
 @Module
-class RealmModule(context: Context) {
+class LocalDataSourceModule(context: Context) {
 
     init {
         Realm.init(context)
     }
 
     @Provides
-    fun provideRealmDb(realm: Realm): RealmDb {
-        return RealmDb(realm)
+    fun provideLocalDataSource(realm: Realm): LocalDataSource {
+        return LocalDataSource(realm)
     }
 
     @Singleton

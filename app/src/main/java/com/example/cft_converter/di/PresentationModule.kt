@@ -1,9 +1,9 @@
 package com.example.cft_converter.di
 
-import com.example.cft_converter.domain.usecase.ConvertCurrencyUseCase
-import com.example.cft_converter.domain.usecase.ReloadListCurrencyUseCase
-import com.example.cft_converter.domain.usecase.RequestListCurrencyUseCase
-import com.example.cft_converter.presentation.CurrencyPresenter
+import com.example.cft_converter.domain.use_case.ConvertCurrencyUseCase
+import com.example.cft_converter.domain.use_case.RequestFreshListOfCurrenciesUseCase
+import com.example.cft_converter.domain.use_case.RequestListOfCurrenciesUseCase
+import com.example.cft_converter.presenters.CurrencyPresenter
 import dagger.Module
 import dagger.Provides
 
@@ -12,14 +12,14 @@ class PresentationModule {
 
     @Provides
     fun provideCurrencyPresenter(
-        requestListCurrencyUseCase: RequestListCurrencyUseCase,
+        requestListOfCurrenciesUseCase: RequestListOfCurrenciesUseCase,
         convertCurrencyUseCase: ConvertCurrencyUseCase,
-        reloadListCurrencyUseCase: ReloadListCurrencyUseCase
+        requestFreshListOfCurrenciesUseCase: RequestFreshListOfCurrenciesUseCase
     ): CurrencyPresenter {
         return CurrencyPresenter(
-            requestListCurrencyUseCase,
+            requestListOfCurrenciesUseCase,
             convertCurrencyUseCase,
-            reloadListCurrencyUseCase
+            requestFreshListOfCurrenciesUseCase
         )
     }
 }

@@ -1,7 +1,7 @@
 package com.example.cft_converter.di
 
-import com.example.cft_converter.data.network.CurrencyApi
-import com.example.cft_converter.data.network.CurrencyRemoteDataSource
+import com.example.cft_converter.data.remote_data_source.CurrencyApi
+import com.example.cft_converter.data.remote_data_source.RemoteDataSource
 import com.example.cft_converter.utils.Constants
 import dagger.Module
 import dagger.Provides
@@ -16,8 +16,8 @@ import javax.inject.Singleton
 class RemoteDataSourceModule {
 
     @Provides
-    fun provideCurrencyRemoteDataSource(currencyApi: CurrencyApi): CurrencyRemoteDataSource {
-        return CurrencyRemoteDataSource(currencyApi)
+    fun provideCurrencyRemoteDataSource(currencyApi: CurrencyApi): RemoteDataSource {
+        return RemoteDataSource(currencyApi)
     }
 
     @Provides

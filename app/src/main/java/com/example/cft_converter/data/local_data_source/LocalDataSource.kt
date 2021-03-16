@@ -1,4 +1,4 @@
-package com.example.cft_converter.data.database
+package com.example.cft_converter.data.local_data_source
 
 import com.example.cft_converter.domain.entity.CurrencyBody
 import com.example.cft_converter.domain.entity.CurrencyEntityDb
@@ -6,24 +6,17 @@ import io.reactivex.Flowable
 import io.realm.Realm
 import io.realm.RealmResults
 
-class RealmDb(private val realm: Realm) {
+class LocalDataSource(private val realm: Realm) {
 
-    fun requestCurrencyEntityList(): Flowable<RealmResults<CurrencyEntityDb>> {
+    fun requestListOfCurrencies(): Flowable<RealmResults<CurrencyEntityDb>> {
         val query = realm.where(CurrencyEntityDb::class.java)
-        val flowable: Flowable<RealmResults<CurrencyEntityDb>>
 
-        flowable = query
+        return query
             .findAllAsync()
             .asFlowable()
-
-        return flowable
     }
 
-    fun saveCurrencyEntity(
-        inputList: List<CurrencyBody>,
-        success: () -> Unit,
-        error: (String) -> Unit
-    ) {
+    fun saveListOfCurrencies(inputList: List<CurrencyBody>) {
         realm.executeTransactionAsync({ realm ->
             realm.deleteAll()
 
@@ -35,10 +28,9 @@ class RealmDb(private val realm: Realm) {
                 currency.value = inputList[i].Value
             }
         }, {
-            success()
         }
         ) {
-            error(it.message.toString())
+            it.printStackTrace()
         }
     }
 }

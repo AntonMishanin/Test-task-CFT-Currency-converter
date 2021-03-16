@@ -1,4 +1,4 @@
-package com.example.cft_converter.presentation
+package com.example.cft_converter.presenters
 
 import com.example.cft_converter.domain.entity.CurrencyBody
 import moxy.MvpView
@@ -10,11 +10,11 @@ interface CurrencyView: MvpView {
 
     fun initView()
 
-    fun setListCurrency(listValute: List<CurrencyBody>)
+    fun setListOfCurrencies(listOfCurrencies: List<CurrencyBody>)
 
-    fun showDialog()
+    fun showCurrencySelectionDialog()
 
-    fun hideDialog()
+    fun hideCurrencySelectionDialog()
 
     fun setInputCurrencyValue(currencyValue: String)
 
@@ -24,9 +24,11 @@ interface CurrencyView: MvpView {
 
     fun setOutputCurrencyCharCode(charCode: String)
 
-    fun showListLoadingError(errorMessage: String)
+    fun showFailLayout()
 
-    fun showPlaceholderNoInternetConnection()
+    fun hideFailLayout()
 
-    fun hidePlaceholderNoInternetConnection()
+    fun showProgressBar()
+
+    fun hideProgressBar()
 }

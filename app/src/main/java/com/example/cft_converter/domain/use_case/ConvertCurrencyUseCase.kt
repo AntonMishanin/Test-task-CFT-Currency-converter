@@ -1,11 +1,10 @@
-package com.example.cft_converter.domain.usecase
+package com.example.cft_converter.domain.use_case
 
 import com.example.cft_converter.domain.CurrencyConverter
-import com.example.cft_converter.domain.ICurrencyRepository
 
-class ConvertCurrencyUseCase(private val repository: ICurrencyRepository, private val converter: CurrencyConverter) {
+class ConvertCurrencyUseCase(private val converter: CurrencyConverter) {
 
-    fun invoke(
+    operator fun invoke(
         inputValue: Double,
         inputCurrencyValue: Double,
         inputNominal: Int,
