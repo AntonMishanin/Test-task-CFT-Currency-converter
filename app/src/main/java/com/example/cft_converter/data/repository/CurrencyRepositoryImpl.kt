@@ -6,6 +6,7 @@ import com.example.cft_converter.data.mapper.CurrencyMapper
 import com.example.cft_converter.domain.CurrencyRepository
 import com.example.cft_converter.domain.entity.CurrencyBody
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
 
 
 class CurrencyRepositoryImpl(
@@ -14,7 +15,7 @@ class CurrencyRepositoryImpl(
 ) : CurrencyRepository {
 
     override fun requestFreshListOfCurrencies(error: (Throwable) -> Unit) {
-        remoteDataSource.requestFreshListOfCurrencies({listOfCurrencies->
+        remoteDataSource.requestFreshListOfCurrencies({ listOfCurrencies ->
             localDataSource.saveListOfCurrencies(listOfCurrencies)
         }, {
             error(it)
@@ -24,8 +25,8 @@ class CurrencyRepositoryImpl(
     override fun requestListOfCurrencies(
         success: (List<CurrencyBody>) -> Unit,
         error: (Throwable) -> Unit
-    ) {
-        localDataSource.requestListOfCurrencies()
+    ): Disposable {
+        return localDataSource.requestListOfCurrencies()
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe { list ->
                 if (list.isEmpty()) {

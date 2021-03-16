@@ -9,6 +9,7 @@ import com.example.cft_converter.utils.Constants.Companion.SELECT_FIRST_VALUTE
 import com.example.cft_converter.utils.Constants.Companion.SELECT_SECOND_VALUTE
 import com.example.cft_converter.utils.toStringWithDot
 import com.example.cft_converter.utils.toValidDouble
+import io.reactivex.disposables.CompositeDisposable
 
 import moxy.InjectViewState
 import moxy.MvpPresenter
@@ -20,6 +21,8 @@ open class CurrencyPresenter(
     private val requestFreshListOfCurrenciesUseCase: RequestFreshListOfCurrenciesUseCase
 ) : MvpPresenter<CurrencyView>() {
 
+    private var compositeDisposable: CompositeDisposable? = null
+
     private lateinit var listOfCurrencies: List<CurrencyBody>
     private var selectCurrency = 0
 
@@ -30,10 +33,12 @@ open class CurrencyPresenter(
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
+        compositeDisposable = CompositeDisposable()
+
         viewState.initView()
 
         viewState?.showProgressBar()
-        requestListOfCurrenciesUseCase({ inputListOfCurrencies ->
+        val disposable = requestListOfCurrenciesUseCase({ inputListOfCurrencies ->
             if (inputListOfCurrencies.isEmpty()) {
                 viewState.showFailLayout()
             } else {
@@ -59,6 +64,12 @@ open class CurrencyPresenter(
             error.printStackTrace()
             viewState?.hideProgressBar()
         })
+
+        compositeDisposable?.add(disposable)
+    }
+
+    fun onDestroyView() {
+        compositeDisposable?.clear()
     }
 
     fun onItemCurrencyClick(position: Int) {
@@ -148,7 +159,7 @@ open class CurrencyPresenter(
         requestFreshContent()
     }
 
-    private fun requestFreshContent(){
+    private fun requestFreshContent() {
         viewState?.showProgressBar()
         requestFreshListOfCurrenciesUseCase { error ->
             error.printStackTrace()
@@ -156,23 +167,3 @@ open class CurrencyPresenter(
         }
     }
 }
-/*
-if (listValute.isNotEmpty()) {
-                viewState.setListOfCurrencies(listValute)
-                listOfCurrencies = listValute
-
-                inputCurrency = listValute[0]
-                val charCode1 = listOfCurrencies[0].CharCode
-                viewState.setInputCurrencyCharCode(charCode1)
-                inputCurrency = listOfCurrencies[0]
-
-                outputCurrency = listValute[1]
-                val charCode2 = listOfCurrencies[1].CharCode
-                viewState.setOutputCurrencyCharCode(charCode2)
-                outputCurrency = listOfCurrencies[1]
-
-                viewState.setInputCurrencyValue("1")
-
-                viewState?.hideProgressBar()
-            }
- */
