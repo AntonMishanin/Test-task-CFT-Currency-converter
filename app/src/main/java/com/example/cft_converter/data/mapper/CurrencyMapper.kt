@@ -1,7 +1,7 @@
 package com.example.cft_converter.data.mapper
 
 import com.example.cft_converter.domain.entity.CurrencyEntity
-import com.example.cft_converter.domain.entity.LocalCurrencyEntity
+import com.example.cft_converter.data.dto.LocalCurrencyEntity
 import io.realm.RealmResults
 
 class CurrencyMapper {

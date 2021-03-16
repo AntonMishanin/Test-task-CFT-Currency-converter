@@ -1,7 +1,7 @@
 package com.example.cft_converter.data.local_data_source
 
 import com.example.cft_converter.domain.entity.CurrencyEntity
-import com.example.cft_converter.domain.entity.LocalCurrencyEntity
+import com.example.cft_converter.data.dto.LocalCurrencyEntity
 import io.reactivex.Flowable
 import io.realm.Realm
 import io.realm.RealmResults

@@ -35,8 +35,7 @@ class CurrencyRepositoryImpl(
                 if (list.isEmpty()) {
                     requestFreshListOfCurrencies(error)
                 } else {
-                    val mapper =
-                        CurrencyMapper()
+                    val mapper = CurrencyMapper()
                     val currencyEntityList = mapper.mapping(list)
                     success(currencyEntityList)
                 }

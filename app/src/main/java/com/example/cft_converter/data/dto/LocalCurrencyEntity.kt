@@ -1,4 +1,4 @@
-package com.example.cft_converter.domain.entity
+package com.example.cft_converter.data.dto
 
 import io.realm.RealmObject
 
