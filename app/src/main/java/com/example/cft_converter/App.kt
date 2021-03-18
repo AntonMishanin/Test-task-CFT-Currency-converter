@@ -3,7 +3,7 @@ package com.example.cft_converter
 import android.app.Application
 import com.example.cft_converter.di.CurrencyComponent
 import com.example.cft_converter.di.DaggerCurrencyComponent
-import com.example.cft_converter.di.RealmModule
+import com.example.cft_converter.di.LocalDataSourceModule
 
 open class App : Application() {
 
@@ -14,7 +14,7 @@ open class App : Application() {
         super.onCreate()
 
         currencyComponent = DaggerCurrencyComponent.builder()
-            .realmModule(RealmModule(this))
+            .localDataSourceModule(LocalDataSourceModule(this))
             .build()
     }
 }
