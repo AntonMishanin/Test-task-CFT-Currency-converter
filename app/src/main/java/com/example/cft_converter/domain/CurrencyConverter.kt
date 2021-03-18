@@ -1,6 +1,8 @@
 package com.example.cft_converter.domain
 
-class CurrencyConverter {
+import javax.inject.Inject
+
+class CurrencyConverter @Inject constructor() {
 
     fun convert(
         inputValue: Double,
