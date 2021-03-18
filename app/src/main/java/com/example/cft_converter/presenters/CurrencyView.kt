@@ -10,19 +10,19 @@ interface CurrencyView: MvpView {
 
     fun initView()
 
-    fun setListOfCurrencies(listOfCurrencyEntities: List<CurrencyEntity>)
+    fun setListOfCurrencies(listOfCurrency: List<CurrencyEntity>)
 
     fun showCurrencySelectionDialog()
 
     fun hideCurrencySelectionDialog()
 
-    fun setInputCurrencyValue(currencyValue: String)
+    fun setCurrencyValueInFirstInputField(currencyValue: String)
 
-    fun setOutputCurrencyValue(currencyValue: String)
+    fun setCurrencyValueInSecondInputField(currencyValue: String)
 
-    fun setInputCurrencyCharCode(charCode: String)
+    fun setFirstCurrencyCharCode(charCode: String)
 
-    fun setOutputCurrencyCharCode(charCode: String)
+    fun setSecondCurrencyCharCode(charCode: String)
 
     fun showFailLayout()
 

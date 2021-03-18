@@ -9,5 +9,5 @@ interface LocalDataSource {
 
     fun requestListOfCurrencies(): Flowable<RealmResults<LocalCurrencyDto>>
 
-    fun saveListOfCurrencies(inputList: List<CurrencyEntity>)
+    fun saveListOfCurrencies(listOfCurrency: List<CurrencyEntity>)
 }

@@ -6,18 +6,18 @@ import io.realm.RealmResults
 
 class CurrencyMapper {
 
-    fun mapping(inputList: RealmResults<LocalCurrencyDto>): List<CurrencyEntity> {
+    fun mapping(inputListOfCurrencies: RealmResults<LocalCurrencyDto>): List<CurrencyEntity> {
 
-        val outputList: MutableList<CurrencyEntity> = ArrayList()
-        for (i in inputList.indices) {
+        val outputListOfCurrencies: MutableList<CurrencyEntity> = ArrayList()
+        for (i in inputListOfCurrencies.indices) {
             val currency = CurrencyEntity()
-            currency.nominal = inputList[i]?.nominal ?: 0
-            currency.value = inputList[i]?.value ?: 0.0
-            currency.name = inputList[i]?.name ?: ""
-            currency.charCode = inputList[i]?.charCode ?: ""
+            currency.nominal = inputListOfCurrencies[i]?.nominal ?: 0
+            currency.value = inputListOfCurrencies[i]?.value ?: 0.0
+            currency.name = inputListOfCurrencies[i]?.name ?: ""
+            currency.charCode = inputListOfCurrencies[i]?.charCode ?: ""
 
-            outputList.add(currency)
+            outputListOfCurrencies.add(currency)
         }
-        return outputList
+        return outputListOfCurrencies
     }
 }

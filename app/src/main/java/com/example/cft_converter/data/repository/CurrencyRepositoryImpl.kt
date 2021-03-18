@@ -30,13 +30,9 @@ class CurrencyRepositoryImpl(
         return localDataSource.requestListOfCurrencies()
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe { list ->
-                if (list.isEmpty()) {
-                    requestFreshListOfCurrencies(error)
-                } else {
-                    val mapper = CurrencyMapper()
-                    val currencyEntityList = mapper.mapping(list)
-                    success(currencyEntityList)
-                }
+                val mapper = CurrencyMapper()
+                val currencyEntityList = mapper.mapping(list)
+                success(currencyEntityList)
             }
     }
 }

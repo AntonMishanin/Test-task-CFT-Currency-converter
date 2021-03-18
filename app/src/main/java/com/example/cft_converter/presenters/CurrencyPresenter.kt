@@ -5,8 +5,11 @@ import com.example.cft_converter.domain.entity.CurrencyEntity
 import com.example.cft_converter.domain.use_case.ConvertCurrencyUseCase
 import com.example.cft_converter.domain.use_case.RequestFreshListOfCurrenciesUseCase
 import com.example.cft_converter.domain.use_case.RequestListOfCurrenciesUseCase
-import com.example.cft_converter.utils.Constants.Companion.SELECT_FIRST_VALUTE
-import com.example.cft_converter.utils.Constants.Companion.SELECT_SECOND_VALUTE
+import com.example.cft_converter.utils.Constants.Companion.DEFAULT_CURRENCY_VALUE
+import com.example.cft_converter.utils.Constants.Companion.FIRST_DEFAULT_CURRENCY_ID
+import com.example.cft_converter.utils.Constants.Companion.SECOND_DEFAULT_CURRENCY_ID
+import com.example.cft_converter.utils.Constants.Companion.SELECT_CURRENCY_FROM_FIRST_INPUT_FIELD
+import com.example.cft_converter.utils.Constants.Companion.SELECT_CURRENCY_FROM_SECOND_INPUT_FIELD
 import com.example.cft_converter.utils.toStringWithDot
 import com.example.cft_converter.utils.toValidDouble
 import io.reactivex.disposables.CompositeDisposable
@@ -23,11 +26,11 @@ open class CurrencyPresenter(
 
     private var compositeDisposable: CompositeDisposable? = null
 
-    private lateinit var listOfCurrencyEntities: List<CurrencyEntity>
-    private var selectCurrency = 0
+    private lateinit var listOfCurrencies: List<CurrencyEntity>
+    private var selectCurrencyFromField = SELECT_CURRENCY_FROM_FIRST_INPUT_FIELD
 
-    private var inputCurrency = CurrencyEntity()
-    private var outputCurrency = CurrencyEntity()
+    private var currencyInFirstInputField = CurrencyEntity()
+    private var currencyInSecondInputField = CurrencyEntity()
     private var inputValue = 0.0
     private var inputCurrencyValueFromUser = true
 
@@ -36,30 +39,10 @@ open class CurrencyPresenter(
         compositeDisposable = CompositeDisposable()
 
         viewState.initView()
-
         viewState?.showProgressBar()
-        val disposable = requestListOfCurrenciesUseCase({ inputListOfCurrencies ->
-            if (inputListOfCurrencies.isEmpty()) {
-                viewState.showFailLayout()
-            } else {
-                viewState.hideFailLayout()
 
-                viewState.setListOfCurrencies(inputListOfCurrencies)
-                listOfCurrencyEntities = inputListOfCurrencies
-
-                inputCurrency = inputListOfCurrencies[0]
-                val charCode1 = listOfCurrencyEntities[0].charCode
-                viewState.setInputCurrencyCharCode(charCode1)
-                inputCurrency = listOfCurrencyEntities[0]
-
-                outputCurrency = inputListOfCurrencies[1]
-                val charCode2 = listOfCurrencyEntities[1].charCode
-                viewState.setOutputCurrencyCharCode(charCode2)
-                outputCurrency = listOfCurrencyEntities[1]
-
-                viewState.setInputCurrencyValue("1")
-            }
-            viewState?.hideProgressBar()
+        val disposable = requestListOfCurrenciesUseCase({ listOfCurrencies ->
+            onSuccessCurrencyDownload(listOfCurrencies)
         }, { error ->
             error.printStackTrace()
             viewState?.hideProgressBar()
@@ -72,75 +55,100 @@ open class CurrencyPresenter(
         compositeDisposable?.clear()
     }
 
-    fun onItemCurrencyClick(position: Int) {
-        when (selectCurrency) {
+    private fun onSuccessCurrencyDownload(listOfCurrencies: List<CurrencyEntity>) {
+        if (listOfCurrencies.isEmpty()) {
+            viewState.showFailLayout()
+        } else {
+            viewState.hideFailLayout()
 
-            SELECT_FIRST_VALUTE -> {
-                val charCode = listOfCurrencyEntities[position].charCode
-                viewState.setInputCurrencyCharCode(charCode)
-                inputCurrency = listOfCurrencyEntities[position]
+            viewState.setListOfCurrencies(listOfCurrencies)
+            this.listOfCurrencies = listOfCurrencies
+
+            //On first download set currency into input field
+            currencyInFirstInputField = listOfCurrencies[FIRST_DEFAULT_CURRENCY_ID]
+            val firstCharCode = this.listOfCurrencies[FIRST_DEFAULT_CURRENCY_ID].charCode
+            viewState.setFirstCurrencyCharCode(firstCharCode)
+            currencyInFirstInputField = this.listOfCurrencies[FIRST_DEFAULT_CURRENCY_ID]
+
+            currencyInSecondInputField = listOfCurrencies[SECOND_DEFAULT_CURRENCY_ID]
+            val secondCharCode = this.listOfCurrencies[SECOND_DEFAULT_CURRENCY_ID].charCode
+            viewState.setSecondCurrencyCharCode(secondCharCode)
+            currencyInSecondInputField = this.listOfCurrencies[SECOND_DEFAULT_CURRENCY_ID]
+
+            viewState.setCurrencyValueInFirstInputField(DEFAULT_CURRENCY_VALUE)
+        }
+        viewState?.hideProgressBar()
+    }
+
+    fun onClickItemCurrency(position: Int) {
+        when (selectCurrencyFromField) {
+
+            SELECT_CURRENCY_FROM_FIRST_INPUT_FIELD -> {
+                val charCode = listOfCurrencies[position].charCode
+                viewState.setFirstCurrencyCharCode(charCode)
+                currencyInFirstInputField = listOfCurrencies[position]
             }
 
-            SELECT_SECOND_VALUTE -> {
-                val charCode = listOfCurrencyEntities[position].charCode
-                viewState.setOutputCurrencyCharCode(charCode)
-                outputCurrency = listOfCurrencyEntities[position]
+            SELECT_CURRENCY_FROM_SECOND_INPUT_FIELD -> {
+                val charCode = listOfCurrencies[position].charCode
+                viewState.setSecondCurrencyCharCode(charCode)
+                currencyInSecondInputField = listOfCurrencies[position]
             }
         }
         convertCurrency()
         viewState.hideCurrencySelectionDialog()
     }
 
-    fun onInputCurrencyTextChanged(inputValue: CharSequence) {
+    fun onFirstInputCurrencyTextChanged(inputValue: CharSequence) {
         if (inputCurrencyValueFromUser) {
             this.inputValue = inputValue.toValidDouble()
-            selectCurrency = SELECT_FIRST_VALUTE
+            selectCurrencyFromField = SELECT_CURRENCY_FROM_FIRST_INPUT_FIELD
             convertCurrency()
         }
     }
 
-    fun onOutputCurrencyTextChanged(inputValue: CharSequence) {
+    fun onSecondInputCurrencyTextChanged(inputValue: CharSequence) {
         if (inputCurrencyValueFromUser) {
             this.inputValue = inputValue.toValidDouble()
-            selectCurrency = SELECT_SECOND_VALUTE
+            selectCurrencyFromField = SELECT_CURRENCY_FROM_SECOND_INPUT_FIELD
             convertCurrency()
         }
     }
 
-    fun onClickSelectInputCurrency() {
-        selectCurrency = SELECT_FIRST_VALUTE
+    fun onClickSelectCurrencyFromFirstInputField() {
+        selectCurrencyFromField = SELECT_CURRENCY_FROM_FIRST_INPUT_FIELD
         viewState.showCurrencySelectionDialog()
     }
 
-    fun onClickSelectOutputCurrency() {
-        selectCurrency = SELECT_SECOND_VALUTE
+    fun onClickSelectCurrencyFromSecondInputField() {
+        selectCurrencyFromField = SELECT_CURRENCY_FROM_SECOND_INPUT_FIELD
         viewState.showCurrencySelectionDialog()
     }
 
     private fun convertCurrency() {
         inputCurrencyValueFromUser = false
 
-        when (selectCurrency) {
-            SELECT_FIRST_VALUTE -> {
-                val outputCurrencyValue = convertCurrencyUseCase(
+        when (selectCurrencyFromField) {
+            SELECT_CURRENCY_FROM_FIRST_INPUT_FIELD -> {
+                val convertedCurrencyValue = convertCurrencyUseCase(
                     inputValue,
-                    inputCurrency.value,
-                    inputCurrency.nominal,
-                    outputCurrency.value,
-                    outputCurrency.nominal
+                    currencyInFirstInputField.value,
+                    currencyInFirstInputField.nominal,
+                    currencyInSecondInputField.value,
+                    currencyInSecondInputField.nominal
                 )
-                viewState.setOutputCurrencyValue(outputCurrencyValue.toStringWithDot())
+                viewState.setCurrencyValueInSecondInputField(convertedCurrencyValue.toStringWithDot())
             }
 
-            SELECT_SECOND_VALUTE -> {
-                val outputCurrencyValue = convertCurrencyUseCase(
+            SELECT_CURRENCY_FROM_SECOND_INPUT_FIELD -> {
+                val convertedCurrencyValue = convertCurrencyUseCase(
                     inputValue,
-                    outputCurrency.value,
-                    outputCurrency.nominal,
-                    inputCurrency.value,
-                    inputCurrency.nominal
+                    currencyInSecondInputField.value,
+                    currencyInSecondInputField.nominal,
+                    currencyInFirstInputField.value,
+                    currencyInFirstInputField.nominal
                 )
-                viewState.setInputCurrencyValue(outputCurrencyValue.toStringWithDot())
+                viewState.setCurrencyValueInFirstInputField(convertedCurrencyValue.toStringWithDot())
             }
         }
 

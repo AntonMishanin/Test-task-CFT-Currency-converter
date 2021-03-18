@@ -10,7 +10,7 @@ class CurrencyAdapter(
     private val onClickItemListener: (Int) -> Unit
 ) : RecyclerView.Adapter<CurrencyViewHolder>() {
 
-    var listOfCurrencyEntities: List<CurrencyEntity> = ArrayList()
+    var listOfCurrency: List<CurrencyEntity> = ArrayList()
         set(value) {
             field = value
             notifyDataSetChanged()
@@ -23,12 +23,12 @@ class CurrencyAdapter(
     }
 
     override fun onBindViewHolder(holder: CurrencyViewHolder, position: Int) {
-        holder.bind(listOfCurrencyEntities[position])
+        holder.bind(listOfCurrency[position])
 
         holder.itemView.setOnClickListener {
             onClickItemListener(position)
         }
     }
 
-    override fun getItemCount(): Int = listOfCurrencyEntities.size
+    override fun getItemCount(): Int = listOfCurrency.size
 }

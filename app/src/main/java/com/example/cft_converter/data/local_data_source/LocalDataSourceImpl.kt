@@ -14,16 +14,16 @@ class LocalDataSourceImpl(private val realm: Realm) : LocalDataSource {
             .findAllAsync()
             .asFlowable()
 
-    override fun saveListOfCurrencies(inputList: List<CurrencyEntity>) {
+    override fun saveListOfCurrencies(listOfCurrency: List<CurrencyEntity>) {
         realm.executeTransactionAsync({ realm ->
             realm.deleteAll()
 
-            for (i in inputList.indices) {
+            for (i in listOfCurrency.indices) {
                 val currency = realm.createObject(LocalCurrencyDto::class.java)
-                currency.charCode = inputList[i].charCode
-                currency.name = inputList[i].name
-                currency.nominal = inputList[i].nominal
-                currency.value = inputList[i].value
+                currency.charCode = listOfCurrency[i].charCode
+                currency.name = listOfCurrency[i].name
+                currency.nominal = listOfCurrency[i].nominal
+                currency.value = listOfCurrency[i].value
             }
         }, {
         }

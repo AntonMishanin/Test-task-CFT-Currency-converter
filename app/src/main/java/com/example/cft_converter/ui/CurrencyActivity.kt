@@ -24,16 +24,15 @@ class CurrencyActivity : MvpAppCompatActivity(), CurrencyView {
     lateinit var presenter: CurrencyPresenter
 
     private lateinit var currencySelectionDialog: AlertDialog
-    private var adapter: CurrencyAdapter? = null
+    private var currencyAdapter: CurrencyAdapter? = null
 
-    private var outputCharCodeView: TextView? = null
-    private var inputCharCodeView: TextView? = null
-    private var outputCurrencyView: EditText? = null
-    private var inputCurrencyView: EditText? = null
+    private var secondCharCodeView: TextView? = null
+    private var firstCharCodeView: TextView? = null
+    private var secondCurrencyInputField: EditText? = null
+    private var firstCurrencyInputField: EditText? = null
 
     private var progressBar: ProgressBar? = null
-
-    private var layoutNoInternetConnection: View? = null
+    private var layoutFail: View? = null
 
     @ProvidePresenter
     fun providePresenter() = presenter
@@ -51,30 +50,29 @@ class CurrencyActivity : MvpAppCompatActivity(), CurrencyView {
     }
 
     override fun initView() {
-        layoutNoInternetConnection = findViewById(R.id.layout_no_internet_connection)
+        layoutFail = findViewById(R.id.layout_fail)
 
-        outputCharCodeView = findViewById(R.id.textView_output_currency_char_code)
-        inputCharCodeView = findViewById(R.id.textView_input_currency_char_code)
+        secondCharCodeView = findViewById(R.id.second_currency_char_code)
+        firstCharCodeView = findViewById(R.id.first_currency_char_code)
 
         initCurrencySelectionDialog()
 
-        inputCurrencyView = findViewById(R.id.editText_currency_input)
-        inputCurrencyView?.afterTextChanged {
-            presenter.onInputCurrencyTextChanged(it)
+        firstCurrencyInputField = findViewById(R.id.first_currency_input_field)
+        firstCurrencyInputField?.afterTextChanged {
+            presenter.onFirstInputCurrencyTextChanged(it)
         }
 
-        outputCurrencyView = findViewById(R.id.textView_currency_output)
-        outputCurrencyView?.afterTextChanged {
-            presenter.onOutputCurrencyTextChanged(it)
+        secondCurrencyInputField = findViewById(R.id.second_currency_input_field)
+        secondCurrencyInputField?.afterTextChanged {
+            presenter.onSecondInputCurrencyTextChanged(it)
         }
 
         //View
-        val selectInputCurrency = findViewById<ImageButton>(R.id.imageButton_select_input_currency)
-        selectInputCurrency?.setOnClickListener { presenter.onClickSelectInputCurrency() }
+        val selectFirstCurrency = findViewById<ImageButton>(R.id.select_first_currency)
+        selectFirstCurrency?.setOnClickListener { presenter.onClickSelectCurrencyFromFirstInputField() }
 
-        val selectOutputCurrency =
-            findViewById<ImageButton>(R.id.imageButton_select_output_currency)
-        selectOutputCurrency?.setOnClickListener { presenter.onClickSelectOutputCurrency() }
+        val selectSecondCurrency = findViewById<ImageButton>(R.id.select_second_currency)
+        selectSecondCurrency?.setOnClickListener { presenter.onClickSelectCurrencyFromSecondInputField() }
 
         val reset = findViewById<ImageButton>(R.id.imageButton_reset_list)
         reset?.setOnClickListener { presenter.onClickResetListOfCurrencies() }
@@ -97,44 +95,44 @@ class CurrencyActivity : MvpAppCompatActivity(), CurrencyView {
 
         currencySelectionDialog.setOnCancelListener { presenter.onCancelCurrencySelectionDialog() }
 
-        adapter = CurrencyAdapter { presenter.onItemCurrencyClick(it) }
+        currencyAdapter = CurrencyAdapter { presenter.onClickItemCurrency(it) }
 
         val currencyRecyclerView =
-            currencySelectionView.findViewById<RecyclerView>(R.id.recyclerView_dialog_currency)
+            currencySelectionView.findViewById<RecyclerView>(R.id.recyclerView_list_of_currencies)
         currencyRecyclerView?.layoutManager = LinearLayoutManager(this)
-        currencyRecyclerView?.adapter = adapter
+        currencyRecyclerView?.adapter = currencyAdapter
     }
 
-    override fun setListOfCurrencies(listOfCurrencyEntities: List<CurrencyEntity>) {
-        adapter?.listOfCurrencyEntities = listOfCurrencyEntities
+    override fun setListOfCurrencies(listOfCurrency: List<CurrencyEntity>) {
+        currencyAdapter?.listOfCurrency = listOfCurrency
     }
 
     override fun showCurrencySelectionDialog() = currencySelectionDialog.show()
 
     override fun hideCurrencySelectionDialog() = currencySelectionDialog.dismiss()
 
-    override fun setInputCurrencyValue(currencyValue: String) {
-        inputCurrencyView?.setText(currencyValue)
+    override fun setCurrencyValueInFirstInputField(currencyValue: String) {
+        firstCurrencyInputField?.setText(currencyValue)
     }
 
-    override fun setOutputCurrencyValue(currencyValue: String) {
-        outputCurrencyView?.setText(currencyValue)
+    override fun setCurrencyValueInSecondInputField(currencyValue: String) {
+        secondCurrencyInputField?.setText(currencyValue)
     }
 
-    override fun setInputCurrencyCharCode(charCode: String) {
-        inputCharCodeView?.text = charCode
+    override fun setFirstCurrencyCharCode(charCode: String) {
+        firstCharCodeView?.text = charCode
     }
 
-    override fun setOutputCurrencyCharCode(charCode: String) {
-        outputCharCodeView?.text = charCode
+    override fun setSecondCurrencyCharCode(charCode: String) {
+        secondCharCodeView?.text = charCode
     }
 
     override fun showFailLayout() {
-        layoutNoInternetConnection?.visible = true
+        layoutFail?.visible = true
     }
 
     override fun hideFailLayout() {
-        layoutNoInternetConnection?.visible = false
+        layoutFail?.visible = false
     }
 
     override fun showProgressBar() {
