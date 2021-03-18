@@ -1,8 +1,9 @@
 package com.example.cft_converter.domain.use_case
 
 import com.example.cft_converter.domain.CurrencyConverter
+import javax.inject.Inject
 
-class ConvertCurrencyUseCase(private val converter: CurrencyConverter) {
+class ConvertCurrencyUseCase @Inject constructor(private val converter: CurrencyConverter) {
 
     operator fun invoke(
         inputValue: Double,

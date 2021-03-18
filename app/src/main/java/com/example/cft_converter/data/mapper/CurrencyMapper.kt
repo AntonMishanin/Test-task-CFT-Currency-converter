@@ -3,8 +3,9 @@ package com.example.cft_converter.data.mapper
 import com.example.cft_converter.domain.entity.CurrencyEntity
 import com.example.cft_converter.data.dto.LocalCurrencyDto
 import io.realm.RealmResults
+import javax.inject.Inject
 
-class CurrencyMapper {
+class CurrencyMapper @Inject constructor() {
 
     fun mapping(inputListOfCurrencies: RealmResults<LocalCurrencyDto>): List<CurrencyEntity> {
 

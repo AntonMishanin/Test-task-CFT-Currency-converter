@@ -7,8 +7,9 @@ import com.example.cft_converter.utils.Constants.Companion.JSON_FIELD_NOMINAL
 import com.example.cft_converter.utils.Constants.Companion.JSON_FIELD_VALUE
 import com.example.cft_converter.utils.Constants.Companion.JSON_FIELD_VALUTE
 import com.google.gson.JsonObject
+import javax.inject.Inject
 
-class JsonMapper {
+class JsonMapper @Inject constructor() {
 
     fun invoke(jsonObject: JsonObject): List<CurrencyEntity> {
         val asJson = jsonObject.getAsJsonObject(JSON_FIELD_VALUTE)

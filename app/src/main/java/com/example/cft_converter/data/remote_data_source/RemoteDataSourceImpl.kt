@@ -6,7 +6,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.observers.DisposableSingleObserver
 import io.reactivex.schedulers.Schedulers
 
-class RemoteDataSourceImpl(private val api: CurrencyApi): RemoteDataSource {
+class RemoteDataSourceImpl(private val api: CurrencyApi) : RemoteDataSource {
 
     override fun requestFreshListOfCurrencies(
         success: (JsonObject) -> Unit,

@@ -1,6 +1,5 @@
 package com.example.cft_converter.presenters
 
-
 import com.example.cft_converter.domain.entity.CurrencyEntity
 import com.example.cft_converter.domain.use_case.ConvertCurrencyUseCase
 import com.example.cft_converter.domain.use_case.RequestFreshListOfCurrenciesUseCase
@@ -16,9 +15,10 @@ import io.reactivex.disposables.CompositeDisposable
 
 import moxy.InjectViewState
 import moxy.MvpPresenter
+import javax.inject.Inject
 
 @InjectViewState
-open class CurrencyPresenter(
+open class CurrencyPresenter @Inject constructor(
     private val requestListOfCurrenciesUseCase: RequestListOfCurrenciesUseCase,
     private val convertCurrencyUseCase: ConvertCurrencyUseCase,
     private val requestFreshListOfCurrenciesUseCase: RequestFreshListOfCurrenciesUseCase
@@ -46,12 +46,14 @@ open class CurrencyPresenter(
         }, { error ->
             error.printStackTrace()
             viewState?.hideProgressBar()
+            viewState.showFailLayout()
         })
 
         compositeDisposable?.add(disposable)
     }
 
-    fun onDestroyView() {
+    override fun onDestroy() {
+        super.onDestroy()
         compositeDisposable?.clear()
     }
 

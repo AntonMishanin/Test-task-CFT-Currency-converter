@@ -44,11 +44,6 @@ class CurrencyActivity : MvpAppCompatActivity(), CurrencyView {
         setContentView(R.layout.activity_currency)
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        presenter.onDestroyView()
-    }
-
     override fun initView() {
         layoutFail = findViewById(R.id.layout_fail)
 

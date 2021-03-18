@@ -3,8 +3,9 @@ package com.example.cft_converter.domain.use_case
 import com.example.cft_converter.domain.CurrencyRepository
 import com.example.cft_converter.domain.entity.CurrencyEntity
 import io.reactivex.disposables.Disposable
+import javax.inject.Inject
 
-class RequestListOfCurrenciesUseCase(private val repository: CurrencyRepository) {
+class RequestListOfCurrenciesUseCase @Inject constructor(private val repository: CurrencyRepository) {
 
     operator fun invoke(
         success: (List<CurrencyEntity>) -> Unit,

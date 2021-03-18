@@ -6,7 +6,7 @@ import moxy.presenter.ProvidePresenter
 import javax.inject.Singleton
 
 @Singleton
-@Component(modules = [PresentationModule::class, LocalDataSourceModule::class, RemoteDataSourceModule::class, DataModule::class, DomainModule::class])
+@Component(modules = [LocalDataSourceModule::class, RemoteDataSourceModule::class, DataModule::class])
 interface CurrencyComponent {
 
     @ProvidePresenter

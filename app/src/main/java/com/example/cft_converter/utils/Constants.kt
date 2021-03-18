@@ -14,7 +14,7 @@ class Constants {
         const val CURRENCY_LIST_API_END_POINT = "/daily_json.js"
 
         const val FIRST_DEFAULT_CURRENCY_ID = 0
-        const val SECOND_DEFAULT_CURRENCY_ID = 0
+        const val SECOND_DEFAULT_CURRENCY_ID = 1
 
         const val DEFAULT_CURRENCY_VALUE = "1"
 

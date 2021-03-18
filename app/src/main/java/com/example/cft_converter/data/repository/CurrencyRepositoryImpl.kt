@@ -7,15 +7,15 @@ import com.example.cft_converter.domain.entity.CurrencyEntity
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 
-
 class CurrencyRepositoryImpl(
     private val localDataSource: LocalDataSource,
-    private val remoteDataSource: RemoteDataSource
+    private val remoteDataSource: RemoteDataSource,
+    private val currencyMapper: CurrencyMapper,
+    private val jsonMapper: JsonMapper
 ) : CurrencyRepository {
 
     override fun requestFreshListOfCurrencies(error: (Throwable) -> Unit) {
         remoteDataSource.requestFreshListOfCurrencies({ jsonObject ->
-            val jsonMapper = JsonMapper()
             val listOfCurrencies = jsonMapper.invoke(jsonObject)
             localDataSource.saveListOfCurrencies(listOfCurrencies)
         }, {
@@ -29,10 +29,13 @@ class CurrencyRepositoryImpl(
     ): Disposable {
         return localDataSource.requestListOfCurrencies()
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe { list ->
-                val mapper = CurrencyMapper()
-                val currencyEntityList = mapper.mapping(list)
-                success(currencyEntityList)
+            .subscribe { listOfCurrencies ->
+                if (listOfCurrencies.isEmpty()) {
+                    requestFreshListOfCurrencies { error(it) }
+                } else {
+                    val currencyEntityList = currencyMapper.mapping(listOfCurrencies)
+                    success(currencyEntityList)
+                }
             }
     }
 }
