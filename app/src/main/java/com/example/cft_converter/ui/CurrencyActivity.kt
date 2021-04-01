@@ -8,7 +8,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.cft_converter.App
 import com.example.cft_converter.R
 import com.example.cft_converter.databinding.ActivityCurrencyBinding
-import com.example.cft_converter.databinding.LayoutFailBinding
 import com.example.cft_converter.domain.entity.CurrencyEntity
 import com.example.cft_converter.presenters.CurrencyPresenter
 import com.example.cft_converter.presenters.CurrencyView
@@ -24,7 +23,6 @@ class CurrencyActivity : MvpAppCompatActivity(), CurrencyView {
     lateinit var presenter: CurrencyPresenter
 
     private var binding: ActivityCurrencyBinding? = null
-    private var bindingFail: LayoutFailBinding? = null
 
     private lateinit var currencySelectionDialog: AlertDialog
     private var currencyAdapter: CurrencyAdapter? = null
@@ -38,13 +36,11 @@ class CurrencyActivity : MvpAppCompatActivity(), CurrencyView {
         super.onCreate(savedInstanceState)
         binding = ActivityCurrencyBinding.inflate(layoutInflater)
         setContentView(binding?.root)
-        bindingFail = LayoutFailBinding.inflate(layoutInflater)
     }
 
     override fun onDestroy() {
         super.onDestroy()
         binding = null
-        bindingFail = null
     }
 
     override fun initView() {
@@ -60,7 +56,7 @@ class CurrencyActivity : MvpAppCompatActivity(), CurrencyView {
 
             resetList.setOnClickListener { presenter.onClickResetListOfCurrencies() }
         }
-        bindingFail?.resetFailLayout?.setOnClickListener { presenter.onClickResetFromFailLayout() }
+        binding?.layoutFail?.resetFailLayout?.setOnClickListener { presenter.onClickResetFromFailLayout() }
 
         initCurrencySelectionDialog()
     }
@@ -110,11 +106,11 @@ class CurrencyActivity : MvpAppCompatActivity(), CurrencyView {
     }
 
     override fun showFailLayout() {
-        bindingFail?.resetFailLayout?.visible = true
+        binding?.layoutFail?.root?.visible = true
     }
 
     override fun hideFailLayout() {
-        bindingFail?.resetFailLayout?.visible = false
+        binding?.layoutFail?.root?.visible = false
     }
 
     override fun showProgressBar() {
