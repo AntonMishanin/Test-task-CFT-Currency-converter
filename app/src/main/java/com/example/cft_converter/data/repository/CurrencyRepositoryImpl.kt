@@ -16,6 +16,8 @@ class CurrencyRepositoryImpl(
 
     override fun requestFreshListOfCurrencies(error: (Throwable) -> Unit) =
         remoteDataSource.requestFreshListOfCurrencies({ jsonObject ->
+            localDataSource.deleteAllCurrencies()
+
             val listOfCurrencies = jsonMapper.invoke(jsonObject)
             localDataSource.saveListOfCurrencies(listOfCurrencies)
         }, {
