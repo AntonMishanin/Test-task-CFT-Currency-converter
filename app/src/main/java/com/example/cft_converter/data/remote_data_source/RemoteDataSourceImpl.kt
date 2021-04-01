@@ -11,18 +11,16 @@ class RemoteDataSourceImpl(private val api: CurrencyApi) : RemoteDataSource {
     override fun requestFreshListOfCurrencies(
         success: (JsonObject) -> Unit,
         error: (Throwable) -> Unit
-    ) {
-        api.requestListOfCurrencies()
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(object : DisposableSingleObserver<JsonObject>() {
-                override fun onSuccess(jsonObject: JsonObject) {
-                    success(jsonObject)
-                }
+    ) = api.requestListOfCurrencies()
+        .subscribeOn(Schedulers.io())
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(object : DisposableSingleObserver<JsonObject>() {
+            override fun onSuccess(jsonObject: JsonObject) {
+                success(jsonObject)
+            }
 
-                override fun onError(e: Throwable) {
-                    error(e)
-                }
-            })
-    }
+            override fun onError(e: Throwable) {
+                error(e)
+            }
+        })
 }

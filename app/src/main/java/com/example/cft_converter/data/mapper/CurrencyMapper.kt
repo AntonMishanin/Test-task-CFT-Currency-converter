@@ -8,7 +8,6 @@ import javax.inject.Inject
 class CurrencyMapper @Inject constructor() {
 
     fun mapping(inputListOfCurrencies: RealmResults<LocalCurrencyDto>): List<CurrencyEntity> {
-
         val outputListOfCurrencies: MutableList<CurrencyEntity> = ArrayList()
         for (i in inputListOfCurrencies.indices) {
             val currency = CurrencyEntity()

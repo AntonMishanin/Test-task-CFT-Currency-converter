@@ -18,23 +18,18 @@ class LocalDataSourceModule(context: Context) {
     }
 
     @Provides
-    fun provideLocalDataSource(realm: Realm): LocalDataSource {
-        return LocalDataSourceImpl(realm)
-    }
+    fun provideLocalDataSource(realm: Realm): LocalDataSource = LocalDataSourceImpl(realm)
 
     @Singleton
     @Provides
-    fun provideRealm(configuration: RealmConfiguration): Realm {
-        return try {
+    fun provideRealm(configuration: RealmConfiguration): Realm =
+        try {
             Realm.getDefaultInstance()
         } catch (e: Exception) {
             Realm.getInstance(configuration)
         }
-    }
 
     @Singleton
     @Provides
-    fun provideRealmConfiguration(): RealmConfiguration{
-        return RealmConfiguration.Builder().build()
-    }
+    fun provideRealmConfiguration(): RealmConfiguration = RealmConfiguration.Builder().build()
 }

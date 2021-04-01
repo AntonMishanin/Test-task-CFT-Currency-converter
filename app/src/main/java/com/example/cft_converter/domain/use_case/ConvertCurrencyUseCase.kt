@@ -11,13 +11,11 @@ class ConvertCurrencyUseCase @Inject constructor(private val converter: Currency
         inputNominal: Int,
         outputCurrencyValue: Double,
         outputNominal: Int
-    ): Double {
-        return converter.convert(
-            inputValue,
-            inputCurrencyValue,
-            inputNominal,
-            outputCurrencyValue,
-            outputNominal
-        )
-    }
+    ): Double = converter.convert(
+        inputValue,
+        inputCurrencyValue,
+        inputNominal,
+        outputCurrencyValue,
+        outputNominal
+    )
 }

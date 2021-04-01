@@ -157,17 +157,11 @@ open class CurrencyPresenter @Inject constructor(
         inputCurrencyValueFromUser = true
     }
 
-    fun onClickResetListOfCurrencies() {
-        requestFreshContent()
-    }
+    fun onClickResetListOfCurrencies() = requestFreshContent()
 
-    fun onCancelCurrencySelectionDialog() {
-        viewState.hideCurrencySelectionDialog()
-    }
+    fun onCancelCurrencySelectionDialog() = viewState.hideCurrencySelectionDialog()
 
-    fun onClickResetFromFailLayout() {
-        requestFreshContent()
-    }
+    fun onClickResetFromFailLayout() = requestFreshContent()
 
     private fun requestFreshContent() {
         viewState?.showProgressBar()

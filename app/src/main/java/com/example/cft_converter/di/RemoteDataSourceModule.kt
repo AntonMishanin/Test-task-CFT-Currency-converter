@@ -17,35 +17,27 @@ import javax.inject.Singleton
 class RemoteDataSourceModule {
 
     @Provides
-    fun provideCurrencyRemoteDataSource(currencyApi: CurrencyApi): RemoteDataSource {
-        return RemoteDataSourceImpl(currencyApi)
-    }
+    fun provideCurrencyRemoteDataSource(currencyApi: CurrencyApi): RemoteDataSource =
+        RemoteDataSourceImpl(currencyApi)
 
     @Provides
-    fun provideCurrencyApi(retrofit: Retrofit): CurrencyApi {
-        return retrofit.create(CurrencyApi::class.java)
-    }
+    fun provideCurrencyApi(retrofit: Retrofit): CurrencyApi =
+        retrofit.create(CurrencyApi::class.java)
 
     @Singleton
     @Provides
     fun provideRetrofit(
         rxJavaAdapterFactory: CallAdapter.Factory,
         gsonConverterFactory: Converter.Factory
-    ): Retrofit {
-        return Retrofit.Builder()
-            .baseUrl(BuildConfig.API_URL)
-            .addCallAdapterFactory(rxJavaAdapterFactory)
-            .addConverterFactory(gsonConverterFactory)
-            .build()
-    }
+    ): Retrofit = Retrofit.Builder()
+        .baseUrl(BuildConfig.API_URL)
+        .addCallAdapterFactory(rxJavaAdapterFactory)
+        .addConverterFactory(gsonConverterFactory)
+        .build()
 
     @Provides
-    fun provideGsonConverterFactory(): Converter.Factory {
-        return GsonConverterFactory.create()
-    }
+    fun provideGsonConverterFactory(): Converter.Factory = GsonConverterFactory.create()
 
     @Provides
-    fun provideRxJava2CallAdapterFactory(): CallAdapter.Factory {
-        return RxJava2CallAdapterFactory.create()
-    }
+    fun provideRxJava2CallAdapterFactory(): CallAdapter.Factory = RxJava2CallAdapterFactory.create()
 }

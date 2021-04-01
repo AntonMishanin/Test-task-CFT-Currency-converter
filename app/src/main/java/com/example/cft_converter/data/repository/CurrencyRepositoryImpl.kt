@@ -14,28 +14,25 @@ class CurrencyRepositoryImpl(
     private val jsonMapper: JsonMapper
 ) : CurrencyRepository {
 
-    override fun requestFreshListOfCurrencies(error: (Throwable) -> Unit) {
+    override fun requestFreshListOfCurrencies(error: (Throwable) -> Unit) =
         remoteDataSource.requestFreshListOfCurrencies({ jsonObject ->
             val listOfCurrencies = jsonMapper.invoke(jsonObject)
             localDataSource.saveListOfCurrencies(listOfCurrencies)
         }, {
             error(it)
         })
-    }
 
     override fun requestListOfCurrencies(
         success: (List<CurrencyEntity>) -> Unit,
         error: (Throwable) -> Unit
-    ): Disposable {
-        return localDataSource.requestListOfCurrencies()
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe { listOfCurrencies ->
-                if (listOfCurrencies.isEmpty()) {
-                    requestFreshListOfCurrencies { error(it) }
-                } else {
-                    val currencyEntityList = currencyMapper.mapping(listOfCurrencies)
-                    success(currencyEntityList)
-                }
+    ): Disposable = localDataSource.requestListOfCurrencies()
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe { listOfCurrencies ->
+            if (listOfCurrencies.isEmpty()) {
+                requestFreshListOfCurrencies { error(it) }
+            } else {
+                val currencyEntityList = currencyMapper.mapping(listOfCurrencies)
+                success(currencyEntityList)
             }
-    }
+        }
 }
