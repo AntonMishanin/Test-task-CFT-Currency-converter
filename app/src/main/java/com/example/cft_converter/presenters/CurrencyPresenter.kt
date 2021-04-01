@@ -9,6 +9,7 @@ import com.example.cft_converter.utils.Constants.Companion.FIRST_DEFAULT_CURRENC
 import com.example.cft_converter.utils.Constants.Companion.SECOND_DEFAULT_CURRENCY_ID
 import com.example.cft_converter.utils.Constants.Companion.SELECT_CURRENCY_FROM_FIRST_INPUT_FIELD
 import com.example.cft_converter.utils.Constants.Companion.SELECT_CURRENCY_FROM_SECOND_INPUT_FIELD
+import com.example.cft_converter.utils.print
 import com.example.cft_converter.utils.toStringWithDot
 import com.example.cft_converter.utils.toValidDouble
 import io.reactivex.disposables.CompositeDisposable
@@ -44,7 +45,7 @@ open class CurrencyPresenter @Inject constructor(
         val disposable = requestListOfCurrenciesUseCase({ listOfCurrencies ->
             onSuccessCurrencyDownload(listOfCurrencies)
         }, { error ->
-            error.printStackTrace()
+            error.print()
             viewState?.hideProgressBar()
             viewState.showFailLayout()
         })
