@@ -1,9 +1,9 @@
 package com.example.cft_converter.di
 
+import com.example.cft_converter.BuildConfig
 import com.example.cft_converter.data.remote_data_source.CurrencyApi
 import com.example.cft_converter.data.remote_data_source.RemoteDataSourceImpl
 import com.example.cft_converter.data.repository.RemoteDataSource
-import com.example.cft_converter.utils.Constants
 import dagger.Module
 import dagger.Provides
 import retrofit2.CallAdapter
@@ -33,7 +33,7 @@ class RemoteDataSourceModule {
         gsonConverterFactory: Converter.Factory
     ): Retrofit {
         return Retrofit.Builder()
-            .baseUrl(Constants.CURRENCY_API_BASE_URL)
+            .baseUrl(BuildConfig.API_URL)
             .addCallAdapterFactory(rxJavaAdapterFactory)
             .addConverterFactory(gsonConverterFactory)
             .build()
