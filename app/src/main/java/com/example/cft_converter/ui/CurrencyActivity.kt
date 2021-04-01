@@ -2,13 +2,13 @@ package com.example.cft_converter.ui
 
 import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.View
-import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cft_converter.App
 import com.example.cft_converter.R
+import com.example.cft_converter.databinding.ActivityCurrencyBinding
+import com.example.cft_converter.databinding.LayoutFailBinding
 import com.example.cft_converter.domain.entity.CurrencyEntity
 import com.example.cft_converter.presenters.CurrencyPresenter
 import com.example.cft_converter.presenters.CurrencyView
@@ -23,16 +23,11 @@ class CurrencyActivity : MvpAppCompatActivity(), CurrencyView {
     @InjectPresenter
     lateinit var presenter: CurrencyPresenter
 
+    private var binding: ActivityCurrencyBinding? = null
+    private var bindingFail: LayoutFailBinding? = null
+
     private lateinit var currencySelectionDialog: AlertDialog
     private var currencyAdapter: CurrencyAdapter? = null
-
-    private var secondCharCodeView: TextView? = null
-    private var firstCharCodeView: TextView? = null
-    private var secondCurrencyInputField: EditText? = null
-    private var firstCurrencyInputField: EditText? = null
-
-    private var progressBar: ProgressBar? = null
-    private var layoutFail: View? = null
 
     @ProvidePresenter
     fun providePresenter() = presenter
@@ -41,41 +36,32 @@ class CurrencyActivity : MvpAppCompatActivity(), CurrencyView {
         presenter = (application as App).currencyComponent.getCurrencyPresenter()
 
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_currency)
+        binding = ActivityCurrencyBinding.inflate(layoutInflater)
+        setContentView(binding?.root)
+        bindingFail = LayoutFailBinding.inflate(layoutInflater)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        binding = null
     }
 
     override fun initView() {
-        layoutFail = findViewById(R.id.layout_fail)
+        binding?.apply {
+            firstCurrencyInputField.afterTextChanged { presenter.onFirstInputCurrencyTextChanged(it) }
 
-        secondCharCodeView = findViewById(R.id.second_currency_char_code)
-        firstCharCodeView = findViewById(R.id.first_currency_char_code)
+            secondCurrencyInputField.afterTextChanged {
+                presenter.onSecondInputCurrencyTextChanged(it)
+            }
+
+            selectFirstCurrency.setOnClickListener { presenter.onClickSelectCurrencyFromFirstInputField() }
+            selectSecondCurrency.setOnClickListener { presenter.onClickSelectCurrencyFromSecondInputField() }
+
+            resetList.setOnClickListener { presenter.onClickResetListOfCurrencies() }
+        }
+        bindingFail?.resetFailLayout?.setOnClickListener { presenter.onClickResetFromFailLayout() }
 
         initCurrencySelectionDialog()
-
-        firstCurrencyInputField = findViewById(R.id.first_currency_input_field)
-        firstCurrencyInputField?.afterTextChanged {
-            presenter.onFirstInputCurrencyTextChanged(it)
-        }
-
-        secondCurrencyInputField = findViewById(R.id.second_currency_input_field)
-        secondCurrencyInputField?.afterTextChanged {
-            presenter.onSecondInputCurrencyTextChanged(it)
-        }
-
-        //View
-        val selectFirstCurrency = findViewById<ImageButton>(R.id.select_first_currency)
-        selectFirstCurrency?.setOnClickListener { presenter.onClickSelectCurrencyFromFirstInputField() }
-
-        val selectSecondCurrency = findViewById<ImageButton>(R.id.select_second_currency)
-        selectSecondCurrency?.setOnClickListener { presenter.onClickSelectCurrencyFromSecondInputField() }
-
-        val reset = findViewById<ImageButton>(R.id.imageButton_reset_list)
-        reset?.setOnClickListener { presenter.onClickResetListOfCurrencies() }
-
-        val resetFromFailLayout = findViewById<Button>(R.id.reset_fail)
-        resetFromFailLayout?.setOnClickListener { presenter.onClickResetFromFailLayout() }
-
-        progressBar = findViewById(R.id.progress_bar)
     }
 
     private fun initCurrencySelectionDialog() {
@@ -107,34 +93,34 @@ class CurrencyActivity : MvpAppCompatActivity(), CurrencyView {
     override fun hideCurrencySelectionDialog() = currencySelectionDialog.dismiss()
 
     override fun setCurrencyValueInFirstInputField(currencyValue: String) {
-        firstCurrencyInputField?.setText(currencyValue)
+        binding?.firstCurrencyInputField?.setText(currencyValue)
     }
 
     override fun setCurrencyValueInSecondInputField(currencyValue: String) {
-        secondCurrencyInputField?.setText(currencyValue)
+        binding?.secondCurrencyInputField?.setText(currencyValue)
     }
 
     override fun setFirstCurrencyCharCode(charCode: String) {
-        firstCharCodeView?.text = charCode
+        binding?.firstCurrencyCharCode?.text = charCode
     }
 
     override fun setSecondCurrencyCharCode(charCode: String) {
-        secondCharCodeView?.text = charCode
+        binding?.secondCurrencyCharCode?.text = charCode
     }
 
     override fun showFailLayout() {
-        layoutFail?.visible = true
+        bindingFail?.resetFailLayout?.visible = true
     }
 
     override fun hideFailLayout() {
-        layoutFail?.visible = false
+        bindingFail?.resetFailLayout?.visible = false
     }
 
     override fun showProgressBar() {
-        progressBar?.visible = true
+        binding?.progressBar?.visible = true
     }
 
     override fun hideProgressBar() {
-        progressBar?.visible = false
+        binding?.progressBar?.visible = false
     }
 }

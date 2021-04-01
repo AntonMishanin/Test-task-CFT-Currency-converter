@@ -32,6 +32,10 @@ android {
     android {
         ndkVersion '21.3.6528147'
     }
+
+    buildFeatures {
+        viewBinding true
+    }
 }
 repositories {
     google()
@@ -41,7 +45,7 @@ repositories {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-    //
+    //Kotlin
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
     //Android x

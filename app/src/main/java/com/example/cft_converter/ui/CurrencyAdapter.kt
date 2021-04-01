@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cft_converter.R
+import com.example.cft_converter.databinding.ItemCurrencyBinding
 import com.example.cft_converter.domain.entity.CurrencyEntity
 
 class CurrencyAdapter(
@@ -17,14 +18,13 @@ class CurrencyAdapter(
         }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CurrencyViewHolder {
-        val inflater = LayoutInflater.from(parent.context)
-        val view = inflater.inflate(R.layout.item_currency, parent, false)
-        return CurrencyViewHolder(view)
+        val layoutInflater = LayoutInflater.from(parent.context)
+        val itemCurrency = ItemCurrencyBinding.inflate(layoutInflater, parent, false)
+        return CurrencyViewHolder(itemCurrency)
     }
 
     override fun onBindViewHolder(holder: CurrencyViewHolder, position: Int) {
         holder.bind(listOfCurrency[position])
-
         holder.itemView.setOnClickListener {
             onClickItemListener(position)
         }
