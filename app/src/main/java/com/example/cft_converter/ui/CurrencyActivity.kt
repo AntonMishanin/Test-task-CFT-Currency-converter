@@ -44,6 +44,7 @@ class CurrencyActivity : MvpAppCompatActivity(), CurrencyView {
     override fun onDestroy() {
         super.onDestroy()
         binding = null
+        bindingFail = null
     }
 
     override fun initView() {

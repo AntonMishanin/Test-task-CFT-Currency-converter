@@ -11,5 +11,4 @@ class RequestListOfCurrenciesUseCase @Inject constructor(private val repository:
         success: (List<CurrencyEntity>) -> Unit,
         error: (Throwable) -> Unit
     ): Disposable = repository.requestListOfCurrencies(success, error)
-
 }
