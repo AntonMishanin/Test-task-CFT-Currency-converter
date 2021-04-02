@@ -4,6 +4,7 @@ import com.example.cft_converter.domain.entity.CurrencyEntity
 import com.example.cft_converter.domain.use_case.ConvertCurrencyUseCase
 import com.example.cft_converter.domain.use_case.RequestFreshListOfCurrenciesUseCase
 import com.example.cft_converter.domain.use_case.RequestListOfCurrenciesUseCase
+import com.example.cft_converter.domain.use_case.SaveCurrencyUseCase
 import com.example.cft_converter.utils.Constants.Companion.DEFAULT_CURRENCY_VALUE
 import com.example.cft_converter.utils.Constants.Companion.FIRST_DEFAULT_CURRENCY_ID
 import com.example.cft_converter.utils.Constants.Companion.SECOND_DEFAULT_CURRENCY_ID
@@ -12,7 +13,11 @@ import com.example.cft_converter.utils.Constants.Companion.SELECT_CURRENCY_FROM_
 import com.example.cft_converter.utils.print
 import com.example.cft_converter.utils.toStringWithDot
 import com.example.cft_converter.utils.toValidDouble
+import com.google.gson.JsonObject
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.observers.DisposableSingleObserver
+import io.reactivex.schedulers.Schedulers
 
 import moxy.InjectViewState
 import moxy.MvpPresenter
@@ -22,7 +27,8 @@ import javax.inject.Inject
 open class CurrencyPresenter @Inject constructor(
     private val requestListOfCurrenciesUseCase: RequestListOfCurrenciesUseCase,
     private val convertCurrencyUseCase: ConvertCurrencyUseCase,
-    private val requestFreshListOfCurrenciesUseCase: RequestFreshListOfCurrenciesUseCase
+    private val requestFreshListOfCurrenciesUseCase: RequestFreshListOfCurrenciesUseCase,
+    private val saveCurrencyUseCase: SaveCurrencyUseCase
 ) : MvpPresenter<CurrencyView>() {
 
     private var compositeDisposable: CompositeDisposable? = null
@@ -43,6 +49,8 @@ open class CurrencyPresenter @Inject constructor(
         viewState?.hideFailLayout()
         viewState?.showProgressBar()
 
+        requestFreshContent()
+
         val disposable = requestListOfCurrenciesUseCase({ listOfCurrencies ->
             onSuccessCurrencyDownload(listOfCurrencies)
         }, { error ->
@@ -60,28 +68,27 @@ open class CurrencyPresenter @Inject constructor(
     }
 
     private fun onSuccessCurrencyDownload(listOfCurrencies: List<CurrencyEntity>) {
-        viewState?.hideProgressBar()
         if (listOfCurrencies.isEmpty()) {
-            viewState.showFailLayout()
-        } else {
-            viewState.hideFailLayout()
-
-            viewState.setListOfCurrencies(listOfCurrencies)
-            this.listOfCurrencies = listOfCurrencies
-
-            //On first download set currency into input field
-            currencyInFirstInputField = listOfCurrencies[FIRST_DEFAULT_CURRENCY_ID]
-            val firstCharCode = this.listOfCurrencies[FIRST_DEFAULT_CURRENCY_ID].charCode
-            viewState.setFirstCurrencyCharCode(firstCharCode)
-            currencyInFirstInputField = this.listOfCurrencies[FIRST_DEFAULT_CURRENCY_ID]
-
-            currencyInSecondInputField = listOfCurrencies[SECOND_DEFAULT_CURRENCY_ID]
-            val secondCharCode = this.listOfCurrencies[SECOND_DEFAULT_CURRENCY_ID].charCode
-            viewState.setSecondCurrencyCharCode(secondCharCode)
-            currencyInSecondInputField = this.listOfCurrencies[SECOND_DEFAULT_CURRENCY_ID]
-
-            viewState.setCurrencyValueInFirstInputField(DEFAULT_CURRENCY_VALUE)
+            return
         }
+        viewState?.hideProgressBar()
+        viewState.hideFailLayout()
+
+        viewState.setListOfCurrencies(listOfCurrencies)
+        this.listOfCurrencies = listOfCurrencies
+
+        //On first download set currency into input field
+        currencyInFirstInputField = listOfCurrencies[FIRST_DEFAULT_CURRENCY_ID]
+        val firstCharCode = this.listOfCurrencies[FIRST_DEFAULT_CURRENCY_ID].charCode
+        viewState.setFirstCurrencyCharCode(firstCharCode)
+        currencyInFirstInputField = this.listOfCurrencies[FIRST_DEFAULT_CURRENCY_ID]
+
+        currencyInSecondInputField = listOfCurrencies[SECOND_DEFAULT_CURRENCY_ID]
+        val secondCharCode = this.listOfCurrencies[SECOND_DEFAULT_CURRENCY_ID].charCode
+        viewState.setSecondCurrencyCharCode(secondCharCode)
+        currencyInSecondInputField = this.listOfCurrencies[SECOND_DEFAULT_CURRENCY_ID]
+
+        viewState.setCurrencyValueInFirstInputField(DEFAULT_CURRENCY_VALUE)
     }
 
     fun onClickItemCurrency(position: Int) {
@@ -169,9 +176,25 @@ open class CurrencyPresenter @Inject constructor(
 
     private fun requestFreshContent() {
         viewState?.showProgressBar()
-        requestFreshListOfCurrenciesUseCase { error ->
-            error.printStackTrace()
-            viewState?.hideProgressBar()
+        viewState?.hideFailLayout()
+
+        val subscriber = object : DisposableSingleObserver<JsonObject>() {
+            override fun onSuccess(jsonObject: JsonObject) {
+                saveCurrencyUseCase(jsonObject)
+            }
+
+            override fun onError(e: Throwable) {
+                e.print()
+                viewState?.hideProgressBar()
+                viewState.showFailLayout()
+            }
         }
+
+        requestFreshListOfCurrenciesUseCase()
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(subscriber)
+
+        compositeDisposable?.add(subscriber)
     }
 }

@@ -11,5 +11,5 @@ interface LocalDataSource {
 
     fun saveListOfCurrencies(listOfCurrency: List<CurrencyEntity>)
 
-    fun deleteAllCurrencies()
+    fun deleteAllCurrencies(onSuccess: () -> Unit)
 }

@@ -3,12 +3,11 @@ package com.example.cft_converter.ui
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.example.cft_converter.R
 import com.example.cft_converter.databinding.ItemCurrencyBinding
 import com.example.cft_converter.domain.entity.CurrencyEntity
 
 class CurrencyAdapter(
-    private val onClickItemListener: (Int) -> Unit
+    private val onClickItem: (Int) -> Unit
 ) : RecyclerView.Adapter<CurrencyViewHolder>() {
 
     var listOfCurrency: List<CurrencyEntity> = ArrayList()
@@ -26,7 +25,7 @@ class CurrencyAdapter(
     override fun onBindViewHolder(holder: CurrencyViewHolder, position: Int) {
         holder.bind(listOfCurrency[position])
         holder.itemView.setOnClickListener {
-            onClickItemListener(position)
+            onClickItem(position)
         }
     }
 
