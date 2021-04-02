@@ -4,6 +4,8 @@ import com.example.cft_converter.data.mapper.CurrencyMapper
 import com.example.cft_converter.data.mapper.JsonMapper
 import com.example.cft_converter.domain.CurrencyRepository
 import com.example.cft_converter.domain.entity.CurrencyEntity
+import com.google.gson.JsonObject
+import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 
@@ -14,27 +16,23 @@ class CurrencyRepositoryImpl(
     private val jsonMapper: JsonMapper
 ) : CurrencyRepository {
 
-    override fun requestFreshListOfCurrencies(error: (Throwable) -> Unit) =
-        remoteDataSource.requestFreshListOfCurrencies({ jsonObject ->
-            localDataSource.deleteAllCurrencies()
+    override fun requestFreshListOfCurrencies(): Single<JsonObject> =
+        remoteDataSource.requestFreshListOfCurrencies()
 
+    override fun saveCurrency(jsonObject: JsonObject) {
+        localDataSource.deleteAllCurrencies{
             val listOfCurrencies = jsonMapper.invoke(jsonObject)
             localDataSource.saveListOfCurrencies(listOfCurrencies)
-        }, {
-            error(it)
-        })
+        }
+    }
 
     override fun requestListOfCurrencies(
         success: (List<CurrencyEntity>) -> Unit,
         error: (Throwable) -> Unit
     ): Disposable = localDataSource.requestListOfCurrencies()
         .observeOn(AndroidSchedulers.mainThread())
-        .subscribe { listOfCurrencies ->
-            if (listOfCurrencies.isEmpty()) {
-                requestFreshListOfCurrencies { error(it) }
-            } else {
-                val currencyEntityList = currencyMapper.mapping(listOfCurrencies)
-                success(currencyEntityList)
-            }
+        .subscribe { listOfCurrenciesDb ->
+            val listOfCurrenciesUi = currencyMapper.mapping(listOfCurrenciesDb)
+            success(listOfCurrenciesUi)
         }
 }

@@ -31,7 +31,9 @@ class LocalDataSourceImpl(private val realm: Realm) : LocalDataSource {
         }
     }
 
-    override fun deleteAllCurrencies() {
-        realm.executeTransactionAsync { realm -> realm.deleteAll() }
+    override fun deleteAllCurrencies(onSuccess: () -> Unit) {
+        realm.executeTransactionAsync({ realm -> realm.deleteAll() },
+            { onSuccess() },
+            { it.print() })
     }
 }
