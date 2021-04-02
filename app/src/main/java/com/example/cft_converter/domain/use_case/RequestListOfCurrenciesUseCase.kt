@@ -10,7 +10,5 @@ class RequestListOfCurrenciesUseCase @Inject constructor(private val repository:
     operator fun invoke(
         success: (List<CurrencyEntity>) -> Unit,
         error: (Throwable) -> Unit
-    ): Disposable {
-        return repository.requestListOfCurrencies(success, error)
-    }
+    ): Disposable = repository.requestListOfCurrencies(success, error)
 }

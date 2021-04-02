@@ -18,7 +18,6 @@ class DataModule {
         remoteDataSource: RemoteDataSource,
         currencyMapper: CurrencyMapper,
         jsonMapper: JsonMapper
-    ): CurrencyRepository {
-        return CurrencyRepositoryImpl(localDataSource, remoteDataSource, currencyMapper, jsonMapper)
-    }
+    ): CurrencyRepository =
+        CurrencyRepositoryImpl(localDataSource, remoteDataSource, currencyMapper, jsonMapper)
 }
