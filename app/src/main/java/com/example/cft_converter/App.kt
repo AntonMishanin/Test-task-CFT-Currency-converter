@@ -14,7 +14,7 @@ open class App : Application() {
         super.onCreate()
 
         currencyComponent = DaggerCurrencyComponent.builder()
-            .localDataSourceModule(LocalDataSourceModule(this))
+            .localDataSourceModule(LocalDataSourceModule(applicationContext))
             .build()
     }
 }

@@ -1,9 +1,9 @@
 package com.example.cft_converter.di
 
+import com.example.cft_converter.BuildConfig
 import com.example.cft_converter.data.remote_data_source.CurrencyApi
 import com.example.cft_converter.data.remote_data_source.RemoteDataSourceImpl
 import com.example.cft_converter.data.repository.RemoteDataSource
-import com.example.cft_converter.utils.Constants
 import dagger.Module
 import dagger.Provides
 import retrofit2.CallAdapter
@@ -17,35 +17,27 @@ import javax.inject.Singleton
 class RemoteDataSourceModule {
 
     @Provides
-    fun provideCurrencyRemoteDataSource(currencyApi: CurrencyApi): RemoteDataSource {
-        return RemoteDataSourceImpl(currencyApi)
-    }
+    fun provideCurrencyRemoteDataSource(currencyApi: CurrencyApi): RemoteDataSource =
+        RemoteDataSourceImpl(currencyApi)
 
     @Provides
-    fun provideCurrencyApi(retrofit: Retrofit): CurrencyApi {
-        return retrofit.create(CurrencyApi::class.java)
-    }
+    fun provideCurrencyApi(retrofit: Retrofit): CurrencyApi =
+        retrofit.create(CurrencyApi::class.java)
 
     @Singleton
     @Provides
     fun provideRetrofit(
         rxJavaAdapterFactory: CallAdapter.Factory,
         gsonConverterFactory: Converter.Factory
-    ): Retrofit {
-        return Retrofit.Builder()
-            .baseUrl(Constants.CURRENCY_API_BASE_URL)
-            .addCallAdapterFactory(rxJavaAdapterFactory)
-            .addConverterFactory(gsonConverterFactory)
-            .build()
-    }
+    ): Retrofit = Retrofit.Builder()
+        .baseUrl(BuildConfig.API_URL)
+        .addCallAdapterFactory(rxJavaAdapterFactory)
+        .addConverterFactory(gsonConverterFactory)
+        .build()
 
     @Provides
-    fun provideGsonConverterFactory(): Converter.Factory {
-        return GsonConverterFactory.create()
-    }
+    fun provideGsonConverterFactory(): Converter.Factory = GsonConverterFactory.create()
 
     @Provides
-    fun provideRxJava2CallAdapterFactory(): CallAdapter.Factory {
-        return RxJava2CallAdapterFactory.create()
-    }
+    fun provideRxJava2CallAdapterFactory(): CallAdapter.Factory = RxJava2CallAdapterFactory.create()
 }

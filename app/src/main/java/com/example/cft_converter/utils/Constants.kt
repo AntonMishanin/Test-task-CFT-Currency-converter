@@ -10,9 +10,6 @@ class Constants {
         const val SELECT_CURRENCY_FROM_FIRST_INPUT_FIELD = 0
         const val SELECT_CURRENCY_FROM_SECOND_INPUT_FIELD = 1
 
-        const val CURRENCY_API_BASE_URL = "https://www.cbr-xml-daily.ru"
-        const val CURRENCY_LIST_API_END_POINT = "/daily_json.js"
-
         const val FIRST_DEFAULT_CURRENCY_ID = 0
         const val SECOND_DEFAULT_CURRENCY_ID = 1
 

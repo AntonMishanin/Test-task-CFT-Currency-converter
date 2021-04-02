@@ -9,6 +9,7 @@ import com.example.cft_converter.utils.Constants.Companion.FIRST_DEFAULT_CURRENC
 import com.example.cft_converter.utils.Constants.Companion.SECOND_DEFAULT_CURRENCY_ID
 import com.example.cft_converter.utils.Constants.Companion.SELECT_CURRENCY_FROM_FIRST_INPUT_FIELD
 import com.example.cft_converter.utils.Constants.Companion.SELECT_CURRENCY_FROM_SECOND_INPUT_FIELD
+import com.example.cft_converter.utils.print
 import com.example.cft_converter.utils.toStringWithDot
 import com.example.cft_converter.utils.toValidDouble
 import io.reactivex.disposables.CompositeDisposable
@@ -39,12 +40,13 @@ open class CurrencyPresenter @Inject constructor(
         compositeDisposable = CompositeDisposable()
 
         viewState.initView()
+        viewState?.hideFailLayout()
         viewState?.showProgressBar()
 
         val disposable = requestListOfCurrenciesUseCase({ listOfCurrencies ->
             onSuccessCurrencyDownload(listOfCurrencies)
         }, { error ->
-            error.printStackTrace()
+            error.print()
             viewState?.hideProgressBar()
             viewState.showFailLayout()
         })
@@ -58,6 +60,7 @@ open class CurrencyPresenter @Inject constructor(
     }
 
     private fun onSuccessCurrencyDownload(listOfCurrencies: List<CurrencyEntity>) {
+        viewState?.hideProgressBar()
         if (listOfCurrencies.isEmpty()) {
             viewState.showFailLayout()
         } else {
@@ -79,7 +82,6 @@ open class CurrencyPresenter @Inject constructor(
 
             viewState.setCurrencyValueInFirstInputField(DEFAULT_CURRENCY_VALUE)
         }
-        viewState?.hideProgressBar()
     }
 
     fun onClickItemCurrency(position: Int) {
@@ -102,19 +104,21 @@ open class CurrencyPresenter @Inject constructor(
     }
 
     fun onFirstInputCurrencyTextChanged(inputValue: CharSequence) {
-        if (inputCurrencyValueFromUser) {
-            this.inputValue = inputValue.toValidDouble()
-            selectCurrencyFromField = SELECT_CURRENCY_FROM_FIRST_INPUT_FIELD
-            convertCurrency()
+        if (!inputCurrencyValueFromUser) {
+            return
         }
+        this.inputValue = inputValue.toValidDouble()
+        selectCurrencyFromField = SELECT_CURRENCY_FROM_FIRST_INPUT_FIELD
+        convertCurrency()
     }
 
     fun onSecondInputCurrencyTextChanged(inputValue: CharSequence) {
-        if (inputCurrencyValueFromUser) {
-            this.inputValue = inputValue.toValidDouble()
-            selectCurrencyFromField = SELECT_CURRENCY_FROM_SECOND_INPUT_FIELD
-            convertCurrency()
+        if (!inputCurrencyValueFromUser) {
+            return
         }
+        this.inputValue = inputValue.toValidDouble()
+        selectCurrencyFromField = SELECT_CURRENCY_FROM_SECOND_INPUT_FIELD
+        convertCurrency()
     }
 
     fun onClickSelectCurrencyFromFirstInputField() {
@@ -157,17 +161,11 @@ open class CurrencyPresenter @Inject constructor(
         inputCurrencyValueFromUser = true
     }
 
-    fun onClickResetListOfCurrencies() {
-        requestFreshContent()
-    }
+    fun onClickResetListOfCurrencies() = requestFreshContent()
 
-    fun onCancelCurrencySelectionDialog() {
-        viewState.hideCurrencySelectionDialog()
-    }
+    fun onCancelCurrencySelectionDialog() = viewState.hideCurrencySelectionDialog()
 
-    fun onClickResetFromFailLayout() {
-        requestFreshContent()
-    }
+    fun onClickResetFromFailLayout() = requestFreshContent()
 
     private fun requestFreshContent() {
         viewState?.showProgressBar()

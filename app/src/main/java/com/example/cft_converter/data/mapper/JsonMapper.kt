@@ -13,7 +13,6 @@ class JsonMapper @Inject constructor() {
 
     fun invoke(jsonObject: JsonObject): List<CurrencyEntity> {
         val asJson = jsonObject.getAsJsonObject(JSON_FIELD_VALUTE)
-
         val outputListOfCurrency: MutableList<CurrencyEntity> = ArrayList()
         for (key in asJson.keySet()) {
             val valute = CurrencyEntity(
